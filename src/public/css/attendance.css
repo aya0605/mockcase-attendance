@@ -1,0 +1,114 @@
+.attendance-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.current-time {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #555;
+}
+
+.status-display {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    color: #666;
+}
+
+/* ステータス表示のテキストスタイル */
+.status-display .status-text {
+    color: black;
+    font-weight: bold;
+}
+
+/* --- ボタンコンテナのスタイル --- */
+.punch-buttons {
+    display: flex;
+    /* ボタンを横並びに */
+    justify-content: center;
+    /* 中央に配置 */
+    gap: 15px;
+    /* ボタン間のスペース */
+    margin-top: 30px;
+    flex-wrap: wrap;
+    /* 画面幅が狭い場合に折り返す */
+}
+
+.punch-buttons form {
+    margin: 0;
+    /* フォームのデフォルトマージンをリセット */
+    /* 各フォームが出すボタンの幅に合わせて調整されるため、ここでのwidth指定は不要 */
+}
+
+/* --- 各ボタンの共通スタイル --- */
+.button {
+    padding: 15px 25px;
+    /* 上下左右のパディングを調整 */
+    font-size: 1.1em;
+    /* フォントサイズを少し小さく */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 150px;
+    /* ★ボタンの固定幅を指定（この値で横並びにした際に調整してください）★ */
+    box-sizing: border-box;
+    /* paddingとborderをwidthに含める */
+}
+
+/* --- ボタンごとの色と幅の指定 --- */
+
+/* 出勤ボタン */
+.button.primary {
+    background-color: black;
+    /* 黒 */
+    color: white;
+}
+
+.button.primary:hover {
+    background-color: #333;
+}
+
+/* 退勤ボタン */
+.button.danger {
+    background-color: black;
+    /* 黒 */
+    color: white;
+}
+
+.button.danger:hover {
+    background-color: #333;
+}
+
+/* 休憩開始/終了ボタン */
+.button.secondary {
+    background-color: white;
+    /* 白 */
+    color: black;
+    border: 1px solid #ccc;
+    /* 枠線を追加して見やすくする */
+}
+
+.button.secondary:hover {
+    background-color: #eee;
+}
+
+/* 無効なボタン */
+.button:disabled {
+    background-color: #cccccc;
+    color: #888888;
+    /* 無効時は文字色も暗く */
+    cursor: not-allowed;
+}
+
+.message-area {
+    margin-top: 20px;
+    font-size: 1.1em;
+    color: green;
+    /* 成功メッセージの色 */
+}

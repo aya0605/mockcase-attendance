@@ -1,0 +1,66 @@
+.header {
+    background: #000;
+}
+
+.header__inner {
+    margin: 0 auto;
+    padding: 20px 15px;
+    max-width: 1230px;
+}
+
+.header-utilities {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: nowrap;
+}
+
+.header__logo {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.header-nav-list {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    justify-content: flex-end;
+    gap: 20px;
+    flex-wrap: nowrap;
+}
+
+.header-nav-item {
+    white-space: nowrap;
+    /* テキストが途中で改行しないように */
+}
+
+.header-nav__link {
+    color: #fff;
+    text-decoration: none;
+    padding: 5px 10px;
+}
+
+.header-nav-item .form {
+    /* liの中のformに適用 */
+    display: flex;
+    /* formの中のボタンもflexで横並びにできますが、今回はボタン1つなので不要かも */
+    align-items: center;
+    margin: 0;
+    /* formのデフォルトマージンをリセット */
+    padding: 0;
+    /* formのデフォルトパディングをリセット */
+}
+
+.header-nav__button {
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 10px;
+}
