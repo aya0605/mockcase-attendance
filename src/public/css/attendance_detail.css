@@ -1,0 +1,152 @@
+body {
+    background-color: #f0f2f5;
+    font-family: sans-serif;
+}
+
+.attendance-detail-container {
+    max-width: 700px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.attendance-detail-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    padding: 0 15px;
+    /* 左右に少しパディングを追加して内容が端に寄りすぎないように */
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="time"],
+.form-group textarea {
+    width: 100%;
+    /* パディングをborder-boxで計算させるため100%に */
+    padding: 10px;
+    /* ★フォームの枠をなくす★ */
+    border: none;
+    border-bottom: 1px solid #ccc;
+    /* 下線のみ残す */
+    border-radius: 0;
+    /* 角丸も削除 */
+    font-size: 1em;
+    box-sizing: border-box;
+    /* paddingとborderをwidthに含める */
+    background-color: transparent;
+    /* 背景を透明に */
+}
+
+/* 読み取り専用の入力フィールドは背景色を維持 */
+.form-group input[readonly] {
+    background-color: #fff;
+    cursor: default;
+    border-bottom: 1px solid #ccc;
+    /* 読み取り専用も下線は維持 */
+}
+
+/* 出勤・退勤、休憩の入力フィールドグループ */
+.time-pair-group,
+.break-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.time-pair-group input[type="time"],
+.break-input-group input[type="time"] {
+    flex: 1;
+    /* 幅を均等に広げる */
+    /* ここも枠をなくす */
+    border: none;
+    border-bottom: 1px solid #ccc;
+    /* 下線のみ残す */
+    border-radius: 0;
+    background-color: transparent;
+}
+
+.time-pair-group span,
+.break-input-group span {
+    font-weight: bold;
+    color: #555;
+}
+
+/* 休憩2 のための調整 */
+/* #add-break-field と .remove-break-field はHTMLから削除したのでCSSも不要です */
+/* もし将来的にまた必要になる可能性があれば、コメントアウトして残しておくことも可能です */
+/* .remove-break-field { ... } */
+/* #add-break-field { ... } */
+
+
+/* ★修正ボタンのスタイル調整★ */
+.submit-button-wrapper {
+    text-align: right;
+    /* 親要素を右寄せ */
+    padding: 0 15px;
+    /* form-group と同じパディング */
+}
+
+.submit-button {
+    display: inline-block;
+    /* widthとtext-align: rightを効かせるため */
+    width: auto;
+    /* ★横幅を小さく★ */
+    padding: 8px 25px;
+    /* ★パディングを調整して小さく見せる★ */
+    background-color: #333;
+    /* ★ボタンを黒に★ */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    /* ボタンの文字サイズも少し小さく */
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.submit-button:hover {
+    background-color: #555;
+    /* ホバー時の色 */
+}
+
+/* アラートメッセージなどの既存スタイルはそのまま */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.pending-message {
+    text-align: center;
+    color: #ffc107;
+    font-weight: bold;
+    margin-top: 20px;
+}

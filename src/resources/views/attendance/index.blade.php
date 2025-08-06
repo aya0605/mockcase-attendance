@@ -84,7 +84,7 @@
         if (startWorkForm) {
             startWorkForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                punchAction('/attendance/start-work', '出勤中');
+                punchAction('/attendance/start-work');
             });
         }
 

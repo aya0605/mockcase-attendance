@@ -7,7 +7,13 @@
 @section('content')
 <div class="login-form__content">
   <div class="login-form__heading">
-    <h2>ログイン</h2>
+    <h2>
+        @if(request()->query('role') === 'admin')
+            管理者ログイン
+        @else
+            ログイン
+        @endif
+    </h2>
   </div>
   <form class="form" action="/login" method="post">
     @csrf
@@ -42,7 +48,13 @@
       </div>
     </div>
     <div class="form__button">
-      <button class="form__button-submit" type="submit">ログインする</button>
+      <button class="form__button-submit" type="submit">
+        @if(request()->query('role') === 'admin')
+          管理者ログインする
+        @else
+          ログインする
+        @endif
+    </button>
     </div>
   </form>
   <div class="register__link">

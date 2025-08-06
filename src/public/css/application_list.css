@@ -1,0 +1,187 @@
+/* public/css/application_list.css */
+
+/* container, page-title など common.css にある場合は不要 */
+.container {
+    max-width: 1230px;
+    /* 勤怠一覧と同じ幅 */
+    margin: 50px auto;
+    padding: 0 15px;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/* テーブルの共通スタイル (勤怠一覧のテーブルスタイルを参考に) */
+.application-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    /* 角丸を効かせるため */
+}
+
+.application-table th,
+.application-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.application-table th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+    color: #555;
+}
+
+.application-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+    /* 偶数行の背景色 */
+}
+
+.application-table tbody tr:hover {
+    background-color: #f0f0f0;
+    /* ホバー時の背景色 */
+}
+
+/* ステータス表示のスタイル */
+.status-pending {
+    color: #ffc107;
+    /* 黄色 */
+    font-weight: bold;
+}
+
+.status-approved {
+    color: #28a745;
+    /* 緑色 */
+    font-weight: bold;
+}
+
+.status-rejected {
+    color: #dc3545;
+    /* 赤色 */
+    font-weight: bold;
+}
+
+.no-applications {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+}
+
+/* 操作ボタンのスタイル */
+.action-button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    /* aタグの場合 */
+    color: white;
+    /* デフォルトの文字色 */
+    display: inline-block;
+    /* パディングとマージンを適用するため */
+    margin-right: 5px;
+    /* ボタン間のスペース */
+}
+
+.approve-button {
+    background-color: #007bff;
+    /* 青 */
+}
+
+.approve-button:hover {
+    background-color: #0056b3;
+}
+
+.reject-button {
+    background-color: #dc3545;
+    /* 赤 */
+}
+
+.reject-button:hover {
+    background-color: #c82333;
+}
+
+.detail-button {
+    background-color: #6c757d;
+    /* グレー */
+}
+
+.detail-button:hover {
+    background-color: #5a6268;
+}
+
+/* ページネーションのスタイル (もしあれば) */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination .page-item {
+    list-style: none;
+    margin: 0 5px;
+}
+
+.pagination .page-link {
+    display: block;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #007bff;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination .page-link:hover:not(.active) {
+    background-color: #e9ecef;
+}
+
+/* タブの枠をなくし、文字のみのデザインにする */
+.tab-container {
+    padding: 0;
+    margin: 0;
+}
+
+.tab-buttons {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: #888;
+    padding: 10px 15px;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.tab-button.active {
+    color: #007bff;
+    /* アクティブなタブに下線を追加 */
+    border-bottom: 3px solid #007bff;
+}
+
+.tab-button:hover:not(.active) {
+    color: #555;
+}
