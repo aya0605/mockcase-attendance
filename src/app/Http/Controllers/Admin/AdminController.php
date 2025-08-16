@@ -3,12 +3,141 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminDetailRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use App\Models\Attendance;
+use App\Models\AttendanceBreak;
+use App\Models\User;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
-    public function dashboard()
+   public function handleLoginRedirect()
     {
-        return view('admin.dashboard');
+        if (Auth::check()) {
+            $user = Auth::user();
+
+            if ($user->role === 1) {
+                return redirect('/admin/dashboard');
+            } else {
+                return redirect('/attendance/index');
+            }
+        }
+        
+        return redirect('/login');
+    }
+
+    /**
+     * 日次勤怠一覧画面（ダッシュボード）
+     */
+    public function dashboard(Request $request)
+    {
+        $date = $request->input('date') ? Carbon::parse($request->input('date')) : Carbon::today();
+        $attendances = Attendance::with('user', 'breaks')
+                                ->whereDate('work_date', $date->toDateString())
+                                ->get();
+        
+        $attendanceData = [];
+        foreach ($attendances as $attendance) {
+            $totalBreakDuration = 0;
+            foreach ($attendance->breaks as $break) {
+                if ($break->start_time && $break->end_time) {
+                    $totalBreakDuration += $break->start_time->diffInSeconds($break->end_time);
+                }
+            }
+            
+            $totalWorkDuration = 0;
+            if ($attendance->start_time && $attendance->end_time) {
+                $totalWorkDuration = $attendance->start_time->diffInSeconds($attendance->end_time) - $totalBreakDuration;
+            }
+            
+            $attendanceData[] = [
+                'user_name' => $attendance->user->name,
+                'work_date' => $attendance->work_date->format('Y-m-d'),
+                'start_time' => $attendance->start_time ? $attendance->start_time->format('H:i') : '-',
+                'end_time' => $attendance->end_time ? $attendance->end_time->format('H:i') : '-',
+                'total_break_time' => gmdate('H:i', $totalBreakDuration),
+                'total_work_time' => gmdate('H:i', max(0, $totalWorkDuration)),
+                'attendance_id' => $attendance->id,
+            ];
+        }
+
+        $prevDay = $date->copy()->subDay()->format('Y-m-d');
+        $nextDay = $date->copy()->addDay()->format('Y-m-d');
+
+        return view('admin.dashboard', [
+            'attendanceData' => $attendanceData,
+            'currentDate' => $date->format('Y-m-d'),
+            'prevDay' => $prevDay,
+            'nextDay' => $nextDay,
+        ]);
+    }
+    
+    /**
+     * スタッフ一覧画面
+     */
+    public function usersIndex()
+    {
+        $users = User::all();
+        
+        return view('admin.users.index', compact('users'));
+    }
+
+    /**
+     * 月次勤怠一覧画面へリダイレクト
+     */
+    public function usersMonthlyAttendances($id)
+    {
+        return redirect()->route('admin.users.attendances', ['id' => $id]);
+    }
+    
+    /**
+     * 勤怠詳細画面
+     */
+    public function detail($attendanceId)
+    {
+        $attendanceData = Attendance::with('breaks')->find($attendanceId);
+
+        if (!$attendanceData) {
+            return redirect('/admin/dashboard')->with('error', '勤怠記録が見つかりませんでした。');
+        }
+
+        return view('admin.detail', [
+            'attendanceData' => $attendanceData
+        ]);
+    }
+
+    /**
+     * 勤怠レコードを更新
+     */
+    public function update(AdminDetailRequest $request, $attendanceId)
+    {
+        $attendance = Attendance::find($attendanceId);
+        if (!$attendance) {
+            return redirect('/admin/dashboard')->with('error', '勤怠記録が見つかりませんでした。');
+        }
+
+        $attendance->start_time = $request->input('start_time');
+        $attendance->end_time = $request->input('end_time');
+        $attendance->note = $request->input('note');
+        $attendance->save();
+
+        if ($attendance->breaks->isNotEmpty()) {
+            $break1 = $attendance->breaks->first();
+            $break1->start_time = $request->input('break_start_1');
+            $break1->end_time = $request->input('break_end_1');
+            $break1->save();
+        }
+
+        if ($attendance->breaks->count() > 1) {
+            $break2 = $attendance->breaks->skip(1)->first();
+            $break2->start_time = $request->input('break_start_2');
+            $break2->end_time = $request->input('break_end_2');
+            $break2->save();
+        }
+
+        return redirect()->back()->with('success', '勤怠記録を更新しました。');
     }
 }

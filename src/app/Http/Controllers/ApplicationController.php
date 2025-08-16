@@ -31,33 +31,34 @@ class ApplicationController extends Controller
         $currentTab = $request->query('tab', 'pending'); // デフォルトは'pending'
 
         return view('applications.index', compact('pendingApplications', 'approvedApplications', 'currentTab'));
-  
+
     }
 
     public function approve(Request $request, Application $application)
     {
         // 管理者権限のチェック（例）
-        if (Auth::user()->role !== 'admin') {
+        if (Auth::user()->role !== 1) { // 'admin'から1に変更
             abort(403, 'Unauthorized action.');
         }
 
         $application->status = 'approved';
         $application->save();
 
-
+        // name属性を使わずに直接URLへリダイレクト
         return redirect('/applications?tab=approved')->with('success', '申請が承認されました。');
     }
 
     public function reject(Request $request, Application $application)
     {
         // 管理者権限のチェック（例）
-        if (Auth::user()->role !== 'admin') {
+        if (Auth::user()->role !== 1) { // 'admin'から1に変更
             abort(403, 'Unauthorized action.');
         }
 
         $application->status = 'rejected';
         $application->save();
 
+        // name属性を使わずに直接URLへリダイレクト
         return redirect('/applications?tab=approved')->with('success', '申請が却下されました。');
     }
 }

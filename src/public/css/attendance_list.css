@@ -1,114 +1,91 @@
 body {
     background-color: #f0f2f5;
-    /* 全体の基準フォントサイズは維持、または調整 */
     font-size: 14px;
-    /* 必要に応じてこの値を調整してください */
+    font-family: 'Inter', sans-serif;
+    color: #333;
 }
 
-.attendance-list-container {
+.attendance__content {
     max-width: 900px;
     margin: 50px auto;
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
-    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* --- 勤怠一覧タイトル (サイズ維持) --- */
-.attendance-list-header {
+.attendance__date-text {
     font-size: 1.5em;
-    /* 変更なし */
     font-weight: bold;
-    color: #333;
+    text-align: center;
+    color: #555;
     margin-bottom: 20px;
-    text-align: left;
-    padding-left: 10px;
 }
 
-/* --- 月ナビゲーション (サイズ維持) --- */
-.month-navigation {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-    font-size: 0.5em;
-    /* 変更なし */
-    color: #333;
-    gap: 15px;
-}
-
-/* カレンダーアイコンと日付表示のコンテナ (サイズ維持) */
-.date-display {
-    display: flex;
-    align-items: center;
-    font-weight: bold;
-    color: #333;
-}
-
-.date-display::before {
-    content: "📅";
-    font-size: 1em;
-    /* 変更なし */
-    margin-right: 5px;
-}
-
-.month-navigation .nav-button {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    padding: 5px 8px;
-    border: none;
-    border-radius: 0;
-    transition: background-color 0.3s, color 0.3s;
-    font-size: 1.2em;
-    /* 変更なし */
-}
-
-.month-navigation .nav-button:hover {
-    background-color: transparent;
-    color: #007bff;
-}
-
-/* --- 勤怠テーブル --- */
-.attendance-table {
+.attendance__table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
-    /* テーブル全体の基本フォントサイズをさらに小さくする */
-    font-size: 0.5em;
-    /* ★ここを調整★ 例えば 0.85em または 12px など */
+    font-size: 0.9em;
 }
 
-.attendance-table th,
-.attendance-table td {
-    border: none;
-    padding: 8px;
-    /* パディングはそのまま維持または調整 */
-    text-align: center;
-    /* テーブルのセル内の文字サイズは、親の .attendance-table で指定されたサイズが適用される */
-}
-
-.attendance-table th {
+.attendance__table thead th {
     background-color: #f2f2f2;
-    font-weight: bold;
     color: #555;
+    font-weight: bold;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 2px solid #ddd;
 }
 
-.attendance-table tbody tr:nth-child(even) {
+.attendance__table tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-.attendance-table tbody tr:hover {
+.attendance__table tbody tr:hover {
     background-color: #f0f0f0;
 }
 
-/* --- 詳細リンク --- */
-.detail-link {
+.attendance__table td,
+.attendance__table th {
+    vertical-align: middle;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.attendance__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.attendance__date {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
+.attendance__button {
     text-decoration: none;
-    color: black;
-    font-weight: normal;
+    color: #333;
+    font-size: 1.5em;
+    padding: 0 10px;
+    transition: color 0.3s ease;
+}
+
+.detail-link {
+    color:#333;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 .detail-link:hover {
     text-decoration: underline;
+    color: #0056b3;
+}
+
+.text-center {
+    text-align: center;
 }

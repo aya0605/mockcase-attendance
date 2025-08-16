@@ -5,18 +5,16 @@
 @endsection
 
 @section('content')
-<div class="attendance-list-container">
-    <h1 class="attendance-list-header">勤怠一覧<h1>
+<div class="attendance__content">
+    <h1 class="attendance__date-text">{{ Carbon\Carbon::createFromFormat('Y年m月', $currentMonth)->format('Y年m月') }}の勤怠</h1>
 
-    <div class="month-navigation">
-        <a href="{{ url('/attendance/list?month=' . $prevMonth) }}" class="nav-button">← 前月</a>
-        <div class="date-display">
-            <span>{{ $currentMonth }}</span>
-        </div>
-        <a href="{{ url('/attendance/list?month=' . $nextMonth) }}" class="nav-button">翌月 →</a>
+    <div class="attendance__header"> 
+        <a href="{{ url('/attendance/list?month=' . $prevMonth) }}" class="attendance__button">← 前月</a> 
+        <h2 class="attendance__date">{{ $currentMonth }}</h2> 
+        <a href="{{ url('/attendance/list?month=' . $nextMonth) }}" class="attendance__button">翌月 →</a> 
     </div>
 
-    <table class="attendance-table">
+    <table class="attendance__table"> 
         <thead>
             <tr>
                 <th>日付</th>
@@ -36,7 +34,6 @@
                 <td>{{ $data['total_break_time'] }}</td>
                 <td>{{ $data['total_work_time'] }}</td>
                 <td>
-                    {{-- 勤怠詳細画面は後で実装するため、今は仮のリンクまたは空でOK --}}
                     <a href="/attendance/detail/{{ $data['attendance_id'] }}" class="detail-link">詳細</a>
                 </td>
             </tr>

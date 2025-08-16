@@ -50,18 +50,19 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/web.php'));
         });
 
+        // Fortify::redirects を使ってログイン後のリダイレクト先をカスタマイズ
         Fortify::redirects('login', function () {
             // ログインしたユーザーを取得
             $user = Auth::user();
 
             // ユーザーのroleが1（管理者）の場合
             if ($user && $user->role === 1) {
-                // 管理者用のダッシュボードへのパスを返す
-                return '/admin/dashboard';
+                // 管理者用の勤怠一覧画面へのパスを返す
+                return '/admin/attendance';
             }
 
             // それ以外（一般ユーザー）の場合
-            return '/'; // または '/dashboard' など
+            return '/';
         });
     }
 

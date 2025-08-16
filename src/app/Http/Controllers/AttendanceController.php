@@ -33,6 +33,9 @@ class AttendanceController extends Controller
         return view('attendance.index', compact('attendance', 'status'));
     }
 
+    /**
+     * 出勤処理
+     */
     public function startWork(Request $request)
     {
         $user = Auth::user();
@@ -73,6 +76,9 @@ class AttendanceController extends Controller
         }
     }
 
+    /**
+     * 退勤処理
+     */
     public function endWork(Request $request)
     {
         $user = Auth::user();
@@ -115,6 +121,9 @@ class AttendanceController extends Controller
         }
     }
 
+    /**
+     * 休憩開始処理
+     */
     public function startBreak(Request $request)
     {
         $user = Auth::user();
@@ -157,6 +166,9 @@ class AttendanceController extends Controller
         }
     }
 
+    /**
+     * 休憩終了処理
+     */
     public function endBreak(Request $request)
     {
         $user = Auth::user();
@@ -201,9 +213,12 @@ class AttendanceController extends Controller
         }
     }
 
+    /**
+     * ユーザーの勤怠履歴リスト表示
+     */
     public function list(Request $request)
     {
-       $user = Auth::user();
+        $user = Auth::user();
         $currentMonth = $request->input('month') ? Carbon::parse($request->input('month')) : Carbon::now();
 
         $firstDayOfMonth = $currentMonth->startOfMonth()->toDateString();
@@ -247,6 +262,9 @@ class AttendanceController extends Controller
         ]);
     }
 
+    /**
+     * 勤怠詳細表示
+     */
     public function detail($attendanceId)
     {
         $user = Auth::user();
@@ -262,6 +280,9 @@ class AttendanceController extends Controller
 
     }
 
+    /**
+     * 勤怠修正申請
+     */
     public function submitApplication(AttendanceUpdateRequest $request, $attendanceId)
     {
         $attendance = Attendance::findOrFail($attendanceId);
