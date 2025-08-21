@@ -1,0 +1,178 @@
+/*
+ * staff_attendance.css
+ * スタッフ別月次勤怠一覧ページのスタイルシート
+ * 'name' 属性は使用していません。
+ */
+
+/* ====================
+   基本設定とレイアウト
+   ==================== */
+
+body {
+    background-color: #f0f2f5;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 2rem 1rem;
+    padding-top: 3cm;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* 上部に寄せる */
+    min-height: 100vh;
+}
+
+.attendance__content {
+    width: 100%;
+    max-width: 900px;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 12px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* ====================
+   ヘッダーとナビゲーション
+   ==================== */
+
+.attendance__header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.attendance__title {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    color: #2c3e50;
+    margin: 0;
+    font-weight: 700;
+}
+
+.attendance__user-info {
+    font-size: clamp(1rem, 2.5vw, 1.2em);
+    color: #2c3e50;
+    margin-top: 0.5rem;
+}
+
+.attendance__date-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.attendance__button,
+.csv-export__button {
+    text-decoration: none;
+    color: #7f8c8d;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+    font-weight: 600;
+}
+
+.attendance__button:hover,
+.csv-export__button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.attendance__button:active,
+.csv-export__button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.attendance__date-text {
+    font-size: clamp(1.5rem, 4vw, 1.8em);
+    color: #333;
+    margin: 0;
+    font-weight: 600;
+}
+
+/* ====================
+   テーブル
+   ==================== */
+
+.attendance__table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.attendance__table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    min-width: 800px;
+    /* 小さな画面での横スクロールを可能にする */
+}
+
+.attendance__table th,
+.attendance__table td {
+    padding: 1.2rem;
+    border: 1px solid #ecf0f1;
+    font-size: 1em;
+}
+
+.attendance__table th {
+    background-color: #ecf0f1;
+    color: #34495e;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.attendance__table tbody tr:hover {
+    background-color: #f8f9fa;
+    transition: background-color 0.2s;
+}
+
+/* ====================
+   リンクとボタン
+   ==================== */
+
+.detail-link {
+    color: #34495e;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+.detail-link:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+/* ====================
+   メディアクエリ (モバイル対応)
+   ==================== */
+
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+
+    .attendance__content {
+        padding: 1.5rem;
+    }
+
+    .attendance__date-navigation {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .attendance__button {
+        width: 100%;
+        text-align: center;
+    }
+}

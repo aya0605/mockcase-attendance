@@ -88,9 +88,65 @@ class AdminController extends Controller
     /**
      * 月次勤怠一覧画面へリダイレクト
      */
-    public function usersMonthlyAttendances($id)
+    public function usersMonthlyAttendances(Request $request, $id)
     {
-        return redirect()->route('admin.users.attendances', ['id' => $id]);
+         $staff = User::findOrFail($id); // 変数名を`staff`に変更
+        $date = $request->input('date') ? Carbon::parse($request->input('date')) : Carbon::today();
+
+        $attendances = Attendance::with('breaks')
+                                 ->where('user_id', $staff->id) // `staff->id`に変更
+                                 ->whereMonth('work_date', $date->month)
+                                 ->whereYear('work_date', $date->year)
+                                 ->get();
+        
+        $attendanceData = [];
+        // (省略) 勤怠データの取得とフォーマットは変更なし
+        foreach ($attendances as $attendance) {
+            $totalBreakDuration = 0;
+            foreach ($attendance->breaks as $break) {
+                if ($break->start_time && $break->end_time) {
+                    $totalBreakDuration += $break->start_time->diffInSeconds($break->end_time);
+                }
+            }
+
+            $totalWorkDuration = 0;
+            if ($attendance->start_time && $attendance->end_time) {
+                $totalWorkDuration = $attendance->start_time->diffInSeconds($attendance->end_time) - $totalBreakDuration;
+            }
+
+            $attendanceData[] = [
+                'work_date' => $attendance->work_date->format('Y-m-d'),
+                'start_time' => $attendance->start_time ? $attendance->start_time->format('H:i') : '-',
+                'end_time' => $attendance->end_time ? $attendance->end_time->format('H:i') : '-',
+                'total_break_time' => gmdate('H:i', $totalBreakDuration),
+                'total_work_time' => gmdate('H:i', max(0, $totalWorkDuration)),
+                'attendance_id' => $attendance->id,
+            ];
+        }
+
+        $prevMonth = $date->copy()->subMonth(); // format()はビューで行う
+        $nextMonth = $date->copy()->addMonth(); // format()はビューで行う
+
+        // 月の全日付リストを作成
+        $daysInMonth = $date->daysInMonth;
+        $allDates = [];
+        for ($i = 1; $i <= $daysInMonth; $i++) {
+            $currentDay = Carbon::createFromDate($date->year, $date->month, $i);
+            $allDates[] = $currentDay->format('Y-m-d');
+        }
+
+        // 勤怠情報がない日のリストを作成
+        $recordedDates = collect($attendanceData)->pluck('work_date')->toArray();
+        $emptyDays = array_diff($allDates, $recordedDates);
+
+        return view('admin.users.staff_attendance', [
+            'staff' => $staff, // 変数名を`staff`に変更
+            'attendanceList' => $attendanceData,
+            'currentMonth' => $date, // Carbonインスタンスをそのまま渡す
+            'prevMonth' => $prevMonth,
+            'nextMonth' => $nextMonth,
+            'emptyDays' => $emptyDays, // 空の日付を渡す
+        ]);
     }
     
     /**

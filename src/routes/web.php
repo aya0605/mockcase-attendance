@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\AdminController;
 |
 */
 
+// --- ユーザーと管理者の共通ルート ---
 Route::middleware('auth')->group(function () {
     Route::get('/', [AttendanceController::class, 'index']);
     Route::get('/attendance/index', [AttendanceController::class, 'index']);
@@ -26,11 +27,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/attendance/list', [AttendanceController::class,'list']);
     Route::get('/attendance/detail/{attendanceId}', [AttendanceController::class, 'detail']);
     Route::post('/attendance/update-application/{attendanceId}', [AttendanceController::class, 'submitApplication']);
-
-    Route::get('/applications', [ApplicationController::class, 'index']);
-    Route::post('/applications/{application}/approve', [ApplicationController::class, 'approve']);
-    Route::post('/applications/{application}/reject', [ApplicationController::class, 'reject']);
-
+    
+    // AdminControllerのログインリダイレクト
     Route::get('/login/redirect', [AdminController::class, 'handleLoginRedirect']);
 });
 
@@ -38,11 +36,11 @@ Route::middleware('auth')->group(function () {
 // --- 管理者専用の認証済みルート ---
 Route::middleware(['auth', 'can:admin-access'])->prefix('admin')->group(function () {
     // 勤怠一覧をダッシュボードとして表示する新しいルート
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/dashboard', [AdminController::class, 'dashboard']);
     
     // ユーザーごとの勤怠一覧を表示するルート
-    Route::get('/users/{id}/attendances', [AdminController::class, 'usersMonthlyAttendances'])->name('admin.users.attendances');
-    Route::get('/users', [AdminController::class, 'usersIndex'])->name('admin.users.index');
+    Route::get('/users/{id}/attendances', [AdminController::class, 'usersMonthlyAttendances']);
+    Route::get('/users', [AdminController::class, 'usersIndex']);
 
     // 勤怠詳細
     Route::get('/attendance/detail/{attendanceId}', [AdminController::class, 'detail']);
@@ -50,4 +48,9 @@ Route::middleware(['auth', 'can:admin-access'])->prefix('admin')->group(function
     // 既存の勤怠詳細ルートは削除またはコメントアウト
     // Route::get('/attendances/{attendanceId}', [AdminController::class, 'detail']);
     Route::post('/attendances/{attendanceId}', [AdminController::class, 'update']);
+    
+    // 申請一覧関連のルートをここに追加
+    Route::get('/applications', [ApplicationController::class, 'index']);
+    Route::post('/applications/{application}/approve', [ApplicationController::class, 'approve']);
+    Route::post('/applications/{application}/reject', [ApplicationController::class, 'reject']);
 });

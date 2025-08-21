@@ -52,7 +52,7 @@
 
 /* ステータス表示のスタイル */
 .status-pending {
-    color: #ffc107;
+    color: #333;
     /* 黄色 */
     font-weight: bold;
 }
