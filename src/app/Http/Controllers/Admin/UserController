@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\User;
+
+class UserController extends Controller
+{
+    /**
+     * Display a listing of the users.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function index()
+    {
+        $users = User::all();
+        
+        return view('admin.users.index', compact('users'));
+    }
+
+    /**
+     * Display the specified user's detail page.
+     *
+     * @param int $id
+     * @return \Illuminate\View\View
+     */
+    public function show($id)
+    {
+        // ユーザーの詳細情報を取得
+        $user = User::with(['attendances', 'applications.attendance'])->findOrFail($id);
+        
+        // ユーザーの勤怠情報を取得
+        $attendances = $user->attendances()->orderBy('work_date', 'desc')->paginate(10);
+        
+        // ユーザーの申請情報を取得
+        $applications = $user->applications()->with('attendance')->orderBy('created_at', 'desc')->get();
+        
+        return view('admin.users.show', compact('user', 'attendances', 'applications'));
+    }
+}

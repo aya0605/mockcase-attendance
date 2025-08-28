@@ -85,11 +85,19 @@ body {
     color: #555;
 }
 
-/* 休憩2 のための調整 */
-/* #add-break-field と .remove-break-field はHTMLから削除したのでCSSも不要です */
-/* もし将来的にまた必要になる可能性があれば、コメントアウトして残しておくことも可能です */
-/* .remove-break-field { ... } */
-/* #add-break-field { ... } */
+/* 休憩時間を横並びにするための新しいスタイル */
+.break-input-group-horizontal {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+    /* 上揃えにする */
+}
+
+.break-input-group-horizontal .break-time-pair {
+    flex: 1;
+    /* 各休憩ペアが均等な幅を占めるようにする */
+}
 
 
 /* ★修正ボタンのスタイル調整★ */

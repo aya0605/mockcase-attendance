@@ -1,6 +1,3 @@
-/* public/css/application_list.css */
-
-/* container, page-title など common.css にある場合は不要 */
 .container {
     max-width: 1230px;
     /* 勤怠一覧と同じ幅 */
@@ -21,7 +18,6 @@
     border-collapse: collapse;
     margin-bottom: 20px;
     background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
     /* 角丸を効かせるため */

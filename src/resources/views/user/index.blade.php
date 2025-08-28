@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('css/application_list.css') }}">
 @endsection
 
@@ -32,7 +33,6 @@
         <thead>
             <tr>
                 <th>状態</th>
-                <th>名前</th>
                 <th>対象日時</th>
                 <th>申請理由</th>
                 <th>申請日時</th>
@@ -40,24 +40,20 @@
             </tr>
         </thead>
         <tbody>
-            @forelse ($pendingApplications as $application)
-            <tr id="application-{{ $application->id }}">
+            {{-- 承認待ちの申請をフィルタリングして表示 --}}
+            @forelse ($applications->where('status', 'pending') as $application)
+            <tr>
                 <td><span class="status-pending">承認待ち</span></td>
-                <td>{{ $application->user->name }}</td>
                 <td>{{ \Carbon\Carbon::parse($application->attendance->work_date)->format('Y-m-d') }}</td>
                 <td>{{ $application->note }}</td>
                 <td>{{ \Carbon\Carbon::parse($application->created_at)->format('Y-m-d H:i') }}</td>
                 <td>
-                    <a href="/attendance/detail/{{ $application->attendance->id }}" class="action-button detail-button">詳細</a>
-                    {{-- 管理者向け承認ボタン（管理者のみ表示） --}}
-                    @if (Auth::user()->role === 'admin')
-                        <button type="button" class="action-button approve-button" data-id="{{ $application->id }}">承認</button>
-                    @endif
+                    <a href="/user/applications/{{ $application->id }}" class="action-button detail-button">詳細</a>
                 </td>
             </tr>
             @empty
             <tr>
-                <td colspan="6" class="no-applications">承認待ちの申請はありません。</td>
+                <td colspan="5" class="no-applications">承認待ちの申請はありません。</td>
             </tr>
             @endforelse
         </tbody>
@@ -70,7 +66,6 @@
         <thead>
             <tr>
                 <th>状態</th>
-                <th>名前</th>
                 <th>対象日時</th>
                 <th>申請理由</th>
                 <th>申請日時</th>
@@ -78,7 +73,8 @@
             </tr>
         </thead>
         <tbody>
-            @forelse ($approvedApplications as $application)
+            {{-- 承認済みと却下の申請をフィルタリングして表示 --}}
+            @forelse ($applications->whereIn('status', ['approved', 'rejected']) as $application)
             <tr>
                 <td>
                     @if ($application->status === 'approved')
@@ -87,25 +83,21 @@
                         <span class="status-rejected">却下</span>
                     @endif
                 </td>
-                <td>{{ $application->user->name }}</td>
                 <td>{{ \Carbon\Carbon::parse($application->attendance->work_date)->format('Y-m-d') }}</td>
                 <td>{{ $application->note }}</td>
                 <td>{{ \Carbon\Carbon::parse($application->created_at)->format('Y-m-d H:i') }}</td>
                 <td>
-                    <a href="/attendance/detail/{{ $application->attendance->id }}" class="action-button detail-button">詳細</a>
+                    <a href="/user/applications/{{ $application->id }}" class="action-button detail-button">詳細</a>
                 </td>
             </tr>
             @empty
             <tr>
-                <td colspan="6" class="no-applications">承認済みの申請はありません。</td>
+                <td colspan="5" class="no-applications">承認済みの申請はありません。</td>
             </tr>
             @endforelse
         </tbody>
     </table>
 </div>
-
-{{-- 却下理由入力用モーダルを削除 --}}
-
 @endsection
 
 @section('scripts')
@@ -123,40 +115,6 @@ document.addEventListener('DOMContentLoaded', function() {
             tabContents.forEach(content => content.classList.remove('active'));
             this.classList.add('active');
             document.getElementById(`${targetTab}-applications`).classList.add('active');
-        });
-    });
-
-    // 承認ボタンクリック時の処理
-    document.querySelectorAll('.approve-button').forEach(button => {
-        button.addEventListener('click', function() {
-            const applicationId = this.dataset.id;
-            const url = `/applications/${applicationId}/approve`;
-            const row = document.getElementById(`application-${applicationId}`);
-
-            if (confirm('この申請を承認してもよろしいですか？')) {
-                fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showStatusMessage('success', data.message);
-                        if (row) {
-                            moveApplicationToApproved(row, data.application);
-                        }
-                    } else {
-                        showStatusMessage('danger', data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showStatusMessage('danger', '承認処理中にエラーが発生しました。');
-                });
-            }
         });
     });
 
@@ -178,30 +136,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 messageDiv.remove();
             }, 500);
         }, 3000);
-    }
-    
-    // 申請リストの行を更新する関数
-    function moveApplicationToApproved(row, applicationData) {
-        const approvedTableBody = document.querySelector('#approved-applications tbody');
-        const newRow = document.createElement('tr');
-        
-        const statusSpan = applicationData.status === 'approved' 
-                           ? '<span class="status-approved">承認済み</span>' 
-                           : '<span class="status-rejected">却下</span>';
-
-        newRow.innerHTML = `
-            <td>${statusSpan}</td>
-            <td>${applicationData.user.name}</td>
-            <td>${applicationData.attendance.work_date}</td>
-            <td>${applicationData.note}</td>
-            <td>${applicationData.created_at}</td>
-            <td>
-                <a href="/attendance/detail/${applicationData.attendance.id}" class="action-button detail-button">詳細</a>
-            </td>
-        `;
-
-        approvedTableBody.prepend(newRow); 
-        row.remove();
     }
 });
 </script>

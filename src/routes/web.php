@@ -2,8 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\ApplicationController;
-use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\User\ApplicationController as UserApplicationController;
+use App\Http\Controllers\Admin\ApplicationController as AdminApplicationController;
+use App\Http\Controllers\Admin\AdminController; 
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,10 +20,10 @@ use App\Http\Controllers\Admin\AdminController;
 |
 */
 
-// --- ユーザーと管理者の共通ルート ---
+// 一般ユーザーと管理者の共通ルート
 Route::middleware('auth')->group(function () {
     Route::get('/', [AttendanceController::class, 'index']);
-    Route::get('/attendance/index', [AttendanceController::class, 'index']);
+    Route::get('/attendance', [AttendanceController::class, 'index']);
     Route::post('/attendance/start-work', [AttendanceController::class, 'startWork']);
     Route::post('/attendance/end-work', [AttendanceController::class, 'endWork']);
     Route::post('/attendance/start-break', [AttendanceController::class, 'startBreak']);
@@ -30,10 +34,14 @@ Route::middleware('auth')->group(function () {
     
     // AdminControllerのログインリダイレクト
     Route::get('/login/redirect', [AdminController::class, 'handleLoginRedirect']);
+    
+    // 一般ユーザー用の申請ルート
+    // `ApplicationController` を `UserApplicationController` に変更
+    Route::get('/applications', [UserApplicationController::class, 'index']);
 });
 
 
-// --- 管理者専用の認証済みルート ---
+// 管理者専用の認証済みルート
 Route::middleware(['auth', 'can:admin-access'])->prefix('admin')->group(function () {
     // 勤怠一覧をダッシュボードとして表示する新しいルート
     Route::get('/dashboard', [AdminController::class, 'dashboard']);
@@ -49,8 +57,12 @@ Route::middleware(['auth', 'can:admin-access'])->prefix('admin')->group(function
     // Route::get('/attendances/{attendanceId}', [AdminController::class, 'detail']);
     Route::post('/attendances/{attendanceId}', [AdminController::class, 'update']);
     
-    // 申請一覧関連のルートをここに追加
-    Route::get('/applications', [ApplicationController::class, 'index']);
-    Route::post('/applications/{application}/approve', [ApplicationController::class, 'approve']);
-    Route::post('/applications/{application}/reject', [ApplicationController::class, 'reject']);
+    // 申請一覧関連のルート
+    Route::get('/applications', [AdminApplicationController::class, 'index']);
+    Route::get('/applications/{applicationId}', [AdminApplicationController::class, 'show']);
+
+    // 承認・却下処理のためのルートをここに統合
+    Route::post('/applications/{application}/approve', [AdminApplicationController::class, 'approve']); 
+    Route::post('/applications/{application}/reject', [AdminApplicationController::class, 'reject']); 
 });
+
