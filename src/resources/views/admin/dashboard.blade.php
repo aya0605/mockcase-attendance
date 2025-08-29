@@ -9,11 +9,8 @@
     <h1 class="attendance__date-text">{{ Carbon\Carbon::parse($currentDate)->format('Y年m月d日') }}の勤怠</h1>
 
     <div class="attendance__header">
-        {{-- 前日へのリンク --}}
         <a href="{{ url('/admin/dashboard?date=' . $prevDay) }}" class="attendance__button">←前日</a>
-        {{-- 現在の日付表示 --}}
         <h2 class="attendance__date">{{ $currentDate }}</h2>
-        {{-- 翌日へのリンク --}}
         <a href="{{ url('/admin/dashboard?date=' . $nextDay) }}" class="attendance__button">翌日→</a>
     </div>
 
@@ -41,7 +38,7 @@
                     @if($attendance['attendance_id'])
                         <a href="{{ url('/admin/attendance/detail/' . $attendance['attendance_id']) }}" class="detail-link">詳細</a>
                     @else
-                        - {{-- 勤怠IDがない場合はハイフン表示 --}}
+                        - 
                     @endif
                 </td>
             </tr>

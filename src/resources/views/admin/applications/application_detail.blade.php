@@ -8,14 +8,12 @@
 <div class="attendance-detail-container">
     <h1>勤怠詳細</h1>
 
-    {{-- 成功メッセージ --}}
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
-    {{-- エラーメッセージ --}}
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -26,7 +24,6 @@
         </div>
     @endif
 
-    {{-- 申請された修正内容のみを表示 --}}
     @if(isset($application))
         <div class="form-group">
             <label for="name">名前</label>
@@ -38,7 +35,6 @@
             <input type="date" id="date" value="{{ $application->attendance->work_date->format('Y-m-d') }}" readonly>
         </div>
 
-        {{-- 修正後の出勤・退勤時間の表示 --}}
         <div class="form-group">
             <label>出勤・退勤</label>
             <div class="time-pair-group">
@@ -48,7 +44,6 @@
             </div>
         </div>
 
-        {{-- 修正後の休憩時間の表示（複数休憩は縦並び、時間ペアは横並び） --}}
         @php
             $breaks = json_decode($application->applied_breaks, true);
         @endphp
@@ -56,10 +51,8 @@
         <div class="form-group">
             <div class="break-input-group-vertical">
                 @foreach($breaks as $index => $break)
-                {{-- 2つ目までの休憩のみを表示 --}}
                 @if($index < 2)
                     <div class="break-time-pair">
-                        {{-- 最初の休憩は「休憩」、2つ目は「休憩2」と表示 --}}
                         @if($index === 0)
                             <label for="break_start_{{ $index + 1 }}">休憩</label>
                         @else
@@ -77,13 +70,11 @@
         </div>
         @endif
 
-        {{-- 修正後の備考の表示 --}}
         <div class="form-group">
             <label for="applied_note">備考</label>
             <textarea id="applied_note" rows="4" readonly>{{ $application->note }}</textarea>
         </div>
 
-        {{-- 承認ボタン --}}
         @if($application->status === 'pending')
             <div class="submit-button-wrapper">
                 <button id="approve-button" data-id="{{ $application->id }}" class="submit-button approve-button">

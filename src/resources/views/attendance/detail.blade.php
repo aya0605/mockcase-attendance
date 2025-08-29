@@ -37,7 +37,6 @@
             <input type="date" id="date" name="date" value="{{ $attendance->work_date->format('Y-m-d') }}" readonly>
         </div>
 
-        {{-- 出勤・退勤の項目 --}}
         <div class="form-group">
             <label>出勤・退勤</label>
             <div class="time-pair-group">
@@ -79,7 +78,7 @@
         </div>
 
         @if (!$isPendingApplication)
-            <div class="submit-button-wrapper"> {{-- ★ボタンを右寄せにするためのラッパー★ --}}
+            <div class="submit-button-wrapper"> 
                 <button type="submit" class="submit-button">修正</button>
             </div>
         @else
@@ -92,9 +91,6 @@
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 「休憩を追加」ボタンを削除したので、関連するJavaScriptも不要になります。
-        // 休憩入力フィールドが2つに固定されたため、動的な追加・削除ロジックは削除します。
-        // もし動的な追加を再開する場合は、このJavaScriptを再実装してください。
     });
 </script>
 @endsection

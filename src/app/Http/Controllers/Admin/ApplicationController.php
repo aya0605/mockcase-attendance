@@ -11,7 +11,6 @@ class ApplicationController extends Controller
 {
     public function index()
     {
-        // 承認待ちの申請と承認済みの申請を取得
         $pendingApplications = Application::where('status', 'pending')
                                 ->with(['user', 'attendance'])
                                 ->orderBy('created_at', 'desc')
@@ -21,10 +20,8 @@ class ApplicationController extends Controller
                                 ->orderBy('created_at', 'desc')
                                 ->get();
 
-        // 現在のタブの状態をクエリパラメータから取得
         $currentTab = request()->query('tab', 'pending');
 
-        // 正しいビューパスを指定
         return view('admin.applications.application_list', compact('pendingApplications', 'approvedApplications', 'currentTab'));
     }
 
@@ -39,13 +36,11 @@ class ApplicationController extends Controller
         try {
             DB::beginTransaction();
 
-            // 申請を承認済みに更新
             $application->update([
                 'status' => 'approved',
                 'approved_at' => now(),
             ]);
 
-            // 申請内容に基づいて勤怠情報を更新
             $attendance = $application->attendance;
             if ($attendance) {
                 $attendance->update([
@@ -55,10 +50,8 @@ class ApplicationController extends Controller
                 ]);
             }
             
-            // 申請の休憩情報を更新
             $appliedBreaks = json_decode($application->applied_breaks, true);
             foreach ($appliedBreaks as $breakData) {
-                // 休憩レコードを特定して更新
                 if (isset($breakData['id'])) {
                     $break = $attendance->breaks()->find($breakData['id']);
                     if ($break) {
@@ -125,7 +118,6 @@ class ApplicationController extends Controller
     {
         $application = Application::with(['user', 'attendance'])->findOrFail($applicationId);
         
-        // 正しいビューパスに変更
         return view('admin.applications.application_detail', compact('application'));
     }
 }

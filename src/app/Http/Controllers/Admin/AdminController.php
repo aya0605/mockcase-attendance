@@ -128,7 +128,7 @@ class AdminController extends Controller
         $recordedDates = collect($attendanceData)->pluck('work_date')->toArray();
         $emptyDays = array_diff($allDates, $recordedDates);
 
-        return view('admin.users.staff_attendance', [
+        return view('admin.users.attendance', [
             'staff' => $staff, 
             'attendanceList' => $attendanceData,
             'currentMonth' => $date, 
@@ -150,7 +150,7 @@ class AdminController extends Controller
             'attendanceData' => $attendanceData
         ]);
     }
-    
+
     public function update(AdminDetailRequest $request, $attendanceId)
     {
         $attendance = Attendance::find($attendanceId);

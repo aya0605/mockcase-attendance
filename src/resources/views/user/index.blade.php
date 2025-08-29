@@ -27,7 +27,6 @@
         <button class="tab-button @if($currentTab === 'approved') active @endif" data-tab="approved">承認済み</button>
     </div>
 
-   {{-- 承認待ちタブの内容 --}}
 <div id="pending-applications" class="tab-content @if($currentTab === 'pending') active @endif">
     <table class="application-table">
         <thead>
@@ -40,7 +39,6 @@
             </tr>
         </thead>
         <tbody>
-            {{-- 承認待ちの申請をフィルタリングして表示 --}}
             @forelse ($applications->where('status', 'pending') as $application)
             <tr>
                 <td><span class="status-pending">承認待ち</span></td>
@@ -60,7 +58,6 @@
     </table>
 </div>
 
-{{-- 承認済みタブの内容 --}}
 <div id="approved-applications" class="tab-content @if($currentTab === 'approved') active @endif">
     <table class="application-table">
         <thead>
@@ -73,7 +70,6 @@
             </tr>
         </thead>
         <tbody>
-            {{-- 承認済みと却下の申請をフィルタリングして表示 --}}
             @forelse ($applications->whereIn('status', ['approved', 'rejected']) as $application)
             <tr>
                 <td>
@@ -107,7 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const tabContents = document.querySelectorAll('.tab-content');
     const statusMessageContainer = document.getElementById('status-message');
 
-    // タブ切り替え機能
     tabButtons.forEach(button => {
         button.addEventListener('click', function() {
             const targetTab = this.dataset.tab;
@@ -118,13 +113,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 処理結果メッセージ表示
     function showStatusMessage(type, message) {
         let messageDiv = document.createElement('div');
         messageDiv.classList.add('alert', `alert-${type}`);
         messageDiv.textContent = message;
 
-        // 既存のメッセージをクリア
         statusMessageContainer.innerHTML = '';
         statusMessageContainer.appendChild(messageDiv);
         

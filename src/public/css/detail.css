@@ -20,7 +20,6 @@ body {
 .form-group {
     margin-bottom: 20px;
     padding: 0 15px;
-    /* 左右に少しパディングを追加して内容が端に寄りすぎないように */
 }
 
 .form-group label {
@@ -35,30 +34,21 @@ body {
 .form-group input[type="time"],
 .form-group textarea {
     width: 100%;
-    /* パディングをborder-boxで計算させるため100%に */
     padding: 10px;
-    /* ★フォームの枠をなくす★ */
     border: none;
     border-bottom: 1px solid #ccc;
-    /* 下線のみ残す */
     border-radius: 0;
-    /* 角丸も削除 */
     font-size: 1em;
     box-sizing: border-box;
-    /* paddingとborderをwidthに含める */
     background-color: transparent;
-    /* 背景を透明に */
 }
 
-/* 読み取り専用の入力フィールドは背景色を維持 */
 .form-group input[readonly] {
     background-color: #fff;
     cursor: default;
     border-bottom: 1px solid #ccc;
-    /* 読み取り専用も下線は維持 */
 }
 
-/* 出勤・退勤、休憩の入力フィールドグループ */
 .time-pair-group,
 .break-input-group {
     display: flex;
@@ -70,11 +60,8 @@ body {
 .time-pair-group input[type="time"],
 .break-input-group input[type="time"] {
     flex: 1;
-    /* 幅を均等に広げる */
-    /* ここも枠をなくす */
     border: none;
     border-bottom: 1px solid #ccc;
-    /* 下線のみ残す */
     border-radius: 0;
     background-color: transparent;
 }
@@ -85,43 +72,31 @@ body {
     color: #555;
 }
 
-/* 休憩時間を横並びにするための新しいスタイル */
 .break-input-group-horizontal {
     display: flex;
     justify-content: space-between;
     gap: 20px;
     align-items: flex-start;
-    /* 上揃えにする */
 }
 
 .break-input-group-horizontal .break-time-pair {
     flex: 1;
-    /* 各休憩ペアが均等な幅を占めるようにする */
 }
 
-
-/* ★修正ボタンのスタイル調整★ */
 .submit-button-wrapper {
     text-align: right;
-    /* 親要素を右寄せ */
     padding: 0 15px;
-    /* form-group と同じパディング */
 }
 
 .submit-button {
     display: inline-block;
-    /* widthとtext-align: rightを効かせるため */
     width: auto;
-    /* ★横幅を小さく★ */
     padding: 8px 25px;
-    /* ★パディングを調整して小さく見せる★ */
     background-color: #333;
-    /* ★ボタンを黒に★ */
     color: white;
     border: none;
     border-radius: 4px;
     font-size: 1em;
-    /* ボタンの文字サイズも少し小さく */
     cursor: pointer;
     transition: background-color 0.3s;
     margin-top: 20px;
@@ -129,10 +104,8 @@ body {
 
 .submit-button:hover {
     background-color: #555;
-    /* ホバー時の色 */
 }
 
-/* アラートメッセージなどの既存スタイルはそのまま */
 .alert {
     padding: 15px;
     margin-bottom: 20px;

@@ -12,8 +12,8 @@
     </div>
 
     <div class="current-time">
-        <p id="current-date"></p> {{-- 日付表示用 --}}
-        <p id="current-time"></p> {{-- 時刻表示用 --}}
+        <p id="current-date"></p> 
+        <p id="current-time"></p> 
     </div>
 
     <div class="punch-buttons">
@@ -44,7 +44,6 @@
 
 @section('scripts')
 <script>
-    // 日付と時刻を更新する関数
     function updateCurrentDateTime() {
         const now = new Date();
 
@@ -53,9 +52,7 @@
         const date = now.getDate().toString().padStart(2, '0');
         const hours = now.getHours().toString().padStart(2, '0');
         const minutes = now.getMinutes().toString().padStart(2, '0');
-        // const seconds = now.getSeconds().toString().padStart(2, '0'); // この行は削除済みでOK
-
-        // 各要素を取得し、存在すれば内容を更新
+        
         const currentDateElement = document.getElementById('current-date');
         if (currentDateElement) {
             currentDateElement.textContent = `${year}年${month}月${date}日`;
@@ -65,19 +62,17 @@
 
         const currentTimeElement = document.getElementById('current-time');
         if (currentTimeElement) {
-            // ★ここを修正しました★ 秒（:${seconds}）を削除
             currentTimeElement.textContent = `${hours}:${minutes}`; 
         } else {
             console.warn("Element with ID 'current-time' not found.");
         }
     }
 
-    // ページが読み込まれてから初期化を実行
     document.addEventListener('DOMContentLoaded', function() {
-        updateCurrentDateTime(); // 初回表示
-        setInterval(updateCurrentDateTime, 1000); // 1秒ごとに更新
+        updateCurrentDateTime(); 
+        setInterval(updateCurrentDateTime, 1000); 
         const initialStatus = "{{ $status ?? '勤務外' }}"; 
-        updateButtonsAndStatus(initialStatus); // 初期ステータスでボタン表示を更新
+        updateButtonsAndStatus(initialStatus); 
 
 
         const startWorkForm = document.getElementById('start-work-form');
@@ -113,43 +108,38 @@
         }
     });
 
-    // ボタンの表示/非表示を更新 (変更なし)
     function updateButtonsAndStatus(status) {
         const statusElement = document.getElementById('attendance-status');
         if (statusElement) {
             statusElement.textContent = status;
         }
 
-        // 各ボタンのフォームとボタン要素を取得
         const startWorkForm = document.getElementById('start-work-form');
         const endWorkForm = document.getElementById('end-work-form');
         const startBreakForm = document.getElementById('start-break-form');
         const endBreakForm = document.getElementById('end-break-form');
 
-        // 初期状態では全て非表示にしておき、必要なものだけ表示する
         if (startWorkForm) startWorkForm.style.display = 'none';
         if (endWorkForm) endWorkForm.style.display = 'none';
         if (startBreakForm) startBreakForm.style.display = 'none';
         if (endBreakForm) endBreakForm.style.display = 'none';
 
-        // 勤務状態に応じたボタンの表示ロジック
         if (status === '勤務外') {
-            if (startWorkForm) startWorkForm.style.display = 'block'; // 出勤ボタンのみ表示
+            if (startWorkForm) startWorkForm.style.display = 'block'; 
         } else if (status === '出勤中') {
-            if (endWorkForm) endWorkForm.style.display = 'block';     // 退勤ボタンを表示
-            if (startBreakForm) startBreakForm.style.display = 'block'; // 休憩開始ボタンを表示
+            if (endWorkForm) endWorkForm.style.display = 'block';    
+            if (startBreakForm) startBreakForm.style.display = 'block'; 
         } else if (status === '休憩中') {
-            if (endBreakForm) endBreakForm.style.display = 'block';   // 休憩終了ボタンのみ表示
+            if (endBreakForm) endBreakForm.style.display = 'block'; 
         } else if (status === '退勤済') {
            
         }
         
     }
 
-    // Ajax 
     async function punchAction(url, successMessage) {
         try {
-            const form = document.querySelector(`form[action="${url}"]`); // ★URLからフォームを特定するように変更★
+            const form = document.querySelector(`form[action="${url}"]`); 
         if (!form) throw new Error(`Form for URL ${url} not found.`);
 
         const formData = new FormData(form);
@@ -172,16 +162,15 @@
 
         if (response.ok) {
             if (messageArea) {
-                messageArea.textContent = successMessage; // 引数で渡されたメッセージを表示
+                messageArea.textContent = successMessage; 
                 messageArea.style.color = 'green';
             }
-            // サーバーから返されるnew_attendance_statusでUIを更新
+            
             if (data.new_attendance_status) {
                 updateButtonsAndStatus(data.new_attendance_status);
             }
         } else {
             if (messageArea) {
-                // サーバーからのエラーメッセージを優先して表示
                 messageArea.textContent = data.message || '不明なエラーが発生しました。';
                 messageArea.style.color = 'red';
             }

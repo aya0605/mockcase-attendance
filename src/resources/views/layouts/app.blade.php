@@ -22,20 +22,15 @@
                     <nav>
                         <ul class="header-nav-list">
                             @if (Auth::check())
-                                {{-- 修正: ユーザーが認証済みであることを確認し、roleが1かチェック --}}
                                 @php
                                     $user = Auth::user();
                                 @endphp
 
                                 @if ($user && $user->role === 1)
-                                    {{-- 管理者用のヘッダー --}}
                                     <li class="header-nav-item"><a class="header-nav__link" href="/admin/dashboard">勤怠一覧</a></li>
-                                    {{-- スタッフ一覧へのリンク --}}
                                     <li class="header-nav-item"><a class="header-nav__link" href="/admin/users">スタッフ一覧</a></li>
-                                    {{-- 申請一覧へのリンク --}}
                                     <li class="header-nav-item"><a class="header-nav__link" href="/admin/applications">申請一覧</a></li>
                                 @else
-                                    {{-- 一般ユーザー用のヘッダー --}}
                                     <li class="header-nav-item"><a class="header-nav__link" href="/">勤怠</a></li>
                                     <li class="header-nav-item"><a class="header-nav__link" href="/attendance/list">勤怠一覧</a></li>
                                     <li class="header-nav-item"><a class="header-nav__link" href="/applications">申請</a></li>

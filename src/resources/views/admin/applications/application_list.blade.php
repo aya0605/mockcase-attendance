@@ -27,7 +27,6 @@
         <button class="tab-button @if($currentTab === 'approved') active @endif" data-tab="approved">承認済み</button>
     </div>
 
-   {{-- 承認待ちタブの内容 --}}
 <div id="pending-applications" class="tab-content @if($currentTab === 'pending') active @endif">
     <table class="application-table">
         <thead>
@@ -52,12 +51,10 @@
                 <td>{{ $application->note }}</td>
                 <td>{{ \Carbon\Carbon::parse($application->created_at)->format('Y-m-d H:i') }}</td>
                 <td>
-                    {{-- 管理者用の詳細ページURLに修正 --}}
                     <a href="/admin/applications/{{ $application->id }}" class="action-button detail-button">詳細</a>
                 </td>
                 @if (Auth::user()->role === 'admin')
                 <td>
-                    {{-- 管理者向け承認/却下ボタン（管理者のみ表示） --}}
                     <button type="button" class="action-button approve-button" data-id="{{ $application->id }}">承認</button>
                     <button type="button" class="action-button reject-button" data-id="{{ $application->id }}">却下</button>
                 </td>
@@ -72,7 +69,6 @@
     </table>
 </div>
 
-{{-- 承認済みタブの内容 --}}
 <div id="approved-applications" class="tab-content @if($currentTab === 'approved') active @endif">
     <table class="application-table">
         <thead>
@@ -108,7 +104,6 @@
                 </td>
                 @if (Auth::user()->role === 'admin')
                 <td>
-                    {{-- 承認/却下済みのため操作なし --}}
                 </td>
                 @endif
             </tr>
@@ -121,7 +116,6 @@
     </table>
 </div>
 
-{{-- 却下理由入力用モーダル --}}
 @if (Auth::user()->role === 'admin')
 <div id="reject-modal" class="modal">
     <div class="modal-content">
@@ -144,7 +138,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const tabContents = document.querySelectorAll('.tab-content');
     const statusMessageContainer = document.getElementById('status-message');
 
-    // タブ切り替え機能
     tabButtons.forEach(button => {
         button.addEventListener('click', function() {
             const targetTab = this.dataset.tab;
@@ -155,17 +148,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 処理結果メッセージ表示
     function showStatusMessage(type, message) {
         let messageDiv = document.createElement('div');
         messageDiv.classList.add('alert', `alert-${type}`);
         messageDiv.textContent = message;
 
-        // 既存のメッセージをクリア
         statusMessageContainer.innerHTML = '';
         statusMessageContainer.appendChild(messageDiv);
         
-        // 3秒後にメッセージを消す
         setTimeout(() => {
             messageDiv.style.opacity = '0';
             messageDiv.style.transition = 'opacity 0.5s ease-out';
@@ -175,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
     
-    // 申請リストの行を更新する関数
     function moveApplicationToApproved(row, applicationData) {
         const approvedTableBody = document.querySelector('#approved-applications tbody');
         const newRow = document.createElement('tr');
@@ -184,7 +173,6 @@ document.addEventListener('DOMContentLoaded', function() {
                            ? '<span class="status-approved">承認済み</span>' 
                            : '<span class="status-rejected">却下</span>';
 
-        // Blade構文をJavaScriptのテンプレートリテラル構文に修正
         newRow.innerHTML = `
             <td>${statusSpan}</td>
             <td>${applicationData.user.name}</td>
@@ -208,7 +196,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 管理者のみの処理
     @if (Auth::user()->role === 'admin')
     const rejectModal = document.getElementById('reject-modal');
     const rejectForm = document.getElementById('reject-form');
@@ -216,11 +203,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeButton = document.querySelector('.close-button');
     const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
 
-    // 承認ボタンクリック時の処理
     document.querySelectorAll('.approve-button').forEach(button => {
         button.addEventListener('click', function() {
             const applicationId = this.dataset.id;
-            // URLにadminプレフィックスを追加
             const url = `/admin/applications/${applicationId}/approve`;
             const row = document.getElementById(`application-${applicationId}`);
 
@@ -251,7 +236,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 却下ボタンクリック時の処理
     document.querySelectorAll('.reject-button').forEach(button => {
         button.addEventListener('click', function() {
             const applicationId = this.dataset.id;
@@ -260,7 +244,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // モーダルを閉じる処理
     closeButton.addEventListener('click', function() {
         rejectModal.style.display = 'none';
         rejectForm.reset();
@@ -273,13 +256,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // 却下理由フォーム送信時の処理
     rejectForm.addEventListener('submit', function(event) {
         event.preventDefault();
 
         const applicationId = modalApplicationId.value;
         const rejectReason = document.getElementById('reject-reason').value;
-        // URLにadminプレフィックスを追加
         const url = `/admin/applications/${applicationId}/reject`;
         const row = document.getElementById(`application-${applicationId}`);
 
