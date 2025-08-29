@@ -65,4 +65,3 @@ Route::middleware(['auth', 'can:admin-access'])->prefix('admin')->group(function
     Route::post('/applications/{application}/approve', [AdminApplicationController::class, 'approve']); 
     Route::post('/applications/{application}/reject', [AdminApplicationController::class, 'reject']); 
 });
-

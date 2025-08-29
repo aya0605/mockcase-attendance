@@ -29,9 +29,7 @@ class AdminController extends Controller
         return redirect('/login');
     }
 
-    /**
-     * 日次勤怠一覧画面（ダッシュボード）
-     */
+
     public function dashboard(Request $request)
     {
         $date = $request->input('date') ? Carbon::parse($request->input('date')) : Carbon::today();
@@ -75,9 +73,6 @@ class AdminController extends Controller
         ]);
     }
     
-    /**
-     * スタッフ一覧画面
-     */
     public function usersIndex()
     {
         $users = User::all();
@@ -85,9 +80,6 @@ class AdminController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
-    /**
-     * 月次勤怠一覧画面へリダイレクト
-     */
     public function usersMonthlyAttendances(Request $request, $id)
     {
          $staff = User::findOrFail($id); // 変数名を`staff`に変更
@@ -100,7 +92,6 @@ class AdminController extends Controller
                                  ->get();
         
         $attendanceData = [];
-        // (省略) 勤怠データの取得とフォーマットは変更なし
         foreach ($attendances as $attendance) {
             $totalBreakDuration = 0;
             foreach ($attendance->breaks as $break) {
@@ -124,10 +115,9 @@ class AdminController extends Controller
             ];
         }
 
-        $prevMonth = $date->copy()->subMonth(); // format()はビューで行う
-        $nextMonth = $date->copy()->addMonth(); // format()はビューで行う
+        $prevMonth = $date->copy()->subMonth(); 
+        $nextMonth = $date->copy()->addMonth(); 
 
-        // 月の全日付リストを作成
         $daysInMonth = $date->daysInMonth;
         $allDates = [];
         for ($i = 1; $i <= $daysInMonth; $i++) {
@@ -135,23 +125,19 @@ class AdminController extends Controller
             $allDates[] = $currentDay->format('Y-m-d');
         }
 
-        // 勤怠情報がない日のリストを作成
         $recordedDates = collect($attendanceData)->pluck('work_date')->toArray();
         $emptyDays = array_diff($allDates, $recordedDates);
 
         return view('admin.users.staff_attendance', [
-            'staff' => $staff, // 変数名を`staff`に変更
+            'staff' => $staff, 
             'attendanceList' => $attendanceData,
-            'currentMonth' => $date, // Carbonインスタンスをそのまま渡す
+            'currentMonth' => $date, 
             'prevMonth' => $prevMonth,
             'nextMonth' => $nextMonth,
-            'emptyDays' => $emptyDays, // 空の日付を渡す
+            'emptyDays' => $emptyDays, 
         ]);
     }
     
-    /**
-     * 勤怠詳細画面
-     */
     public function detail($attendanceId)
     {
         $attendanceData = Attendance::with('breaks')->find($attendanceId);
@@ -164,10 +150,7 @@ class AdminController extends Controller
             'attendanceData' => $attendanceData
         ]);
     }
-
-    /**
-     * 勤怠レコードを更新
-     */
+    
     public function update(AdminDetailRequest $request, $attendanceId)
     {
         $attendance = Attendance::find($attendanceId);

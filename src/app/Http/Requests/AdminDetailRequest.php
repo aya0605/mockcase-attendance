@@ -13,7 +13,6 @@ class AdminDetailRequest extends FormRequest
      */
     public function authorize()
     {
-        // 管理者のみリクエストを許可する
         return auth()->check() && auth()->user()->is_admin;
     }
 
