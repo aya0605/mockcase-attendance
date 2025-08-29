@@ -128,7 +128,6 @@ document.addEventListener('DOMContentLoaded', function() {
         statusMessageContainer.innerHTML = '';
         statusMessageContainer.appendChild(messageDiv);
         
-        // 3秒後にメッセージを消す
         setTimeout(() => {
             messageDiv.style.opacity = '0';
             messageDiv.style.transition = 'opacity 0.5s ease-out';
