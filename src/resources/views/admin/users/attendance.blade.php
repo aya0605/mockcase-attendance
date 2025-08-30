@@ -39,7 +39,7 @@
                             <td>{{ $attendance['total_break_time'] }}</td>
                             <td>{{ $attendance['total_work_time'] }}</td>
                             <td>
-                            <a href="/admin/attendances/{{ $attendance['attendance_id'] }}/edit" class="detail-link">詳細</a>
+                                <a href="/admin/attendances/{{ $attendance['attendance_id'] }}" class="detail-link">詳細</a>
                             </td>
                         </tr>
                     @endforeach

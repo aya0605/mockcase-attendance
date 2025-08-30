@@ -24,7 +24,7 @@
         </div>
     @endif
 
-    <form action="{{ url('admin/attendance/update/' . $attendanceData->id) }}" method="POST">
+        <form action="{{ url('admin/attendance/update/' . $attendanceData->id) }}" method="POST">
         @csrf
 
         <div class="form-group">
