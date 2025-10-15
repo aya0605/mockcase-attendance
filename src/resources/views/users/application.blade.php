@@ -107,26 +107,20 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const targetTab = this.dataset.tab;
             
-            // すべてのタブボタンから 'active' クラスを削除
             tabButtons.forEach(btn => btn.classList.remove('active'));
             
-            // クリックされたボタンに 'active' クラスを追加
             this.classList.add('active');
             
-            // すべてのタブコンテンツから 'active' クラスを削除
             tabContents.forEach(content => content.classList.remove('active'));
             
-            // 選択されたタブに対応するコンテンツに 'active' クラスを追加
             document.getElementById(`${targetTab}-applications`).classList.add('active');
 
-            // URLのクエリパラメータを更新
             const newUrl = new URL(window.location.href);
             newUrl.searchParams.set('tab', targetTab);
             window.history.pushState({ path: newUrl.href }, '', newUrl.href);
         });
     });
     
-    // ページロード時の初期タブ表示
     const initialTab = new URLSearchParams(window.location.search).get('tab') || 'pending';
     const initialButton = document.querySelector(`.tab-button[data-tab="${initialTab}"]`);
     const initialContent = document.getElementById(`${initialTab}-applications`);

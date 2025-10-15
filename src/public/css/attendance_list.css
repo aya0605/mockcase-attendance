@@ -1,90 +1,122 @@
-body {
-    background-color: #f0f2f5;
-    font-size: 14px;
-    font-family: 'Inter', sans-serif;
-    color: #333;
+.attendance-list__content {
+    background: #F0EFF2;
+    height: 100vh;
+    margin: 0 auto;
+    max-width: 1540px;
+    padding: 50px;
+    padding-top: 50px;
 }
 
-.attendance__content {
-    max-width: 900px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
+.content__header {
+    border-left: 7px solid #000;
+    margin: 0 auto;
+    max-width: 100vh;
+    padding-left: 10px;
 }
 
-.attendance__date-text {
-    font-size: 1.5em;
-    font-weight: bold;
-    text-align: center;
-    color: #555;
-    margin-bottom: 20px;
-}
-
-.attendance__table {
+.content__menu,
+.table {
+    background: #FFF;
+    border-radius: 10px;
+    margin: 0 auto;
+    max-width: 100vh;
     width: 100%;
+}
+
+.table {
+    color: #737373;
     border-collapse: collapse;
-    margin-top: 15px;
-    font-size: 0.9em;
 }
 
-.attendance__table thead th {
-    background-color: #f2f2f2;
-    color: #555;
-    font-weight: bold;
-    padding: 12px;
-    text-align: center;
-    border-bottom: 2px solid #ddd;
-}
-
-.attendance__table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.attendance__table tbody tr:hover {
-    background-color: #f0f0f0;
-}
-
-.attendance__table td,
-.attendance__table th {
-    vertical-align: middle;
-    padding: 12px;
-    text-align: center;
-    border-bottom: 1px solid #eee;
-}
-
-.attendance__header {
-    display: flex;
-    justify-content: space-between;
+.content__menu {
     align-items: center;
-    margin-bottom: 20px;
+    display: flex;
+    height: 60px;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding: 10px;
 }
 
-.attendance__date {
-    font-size: 1.2em;
+.previous-month,
+.next-month,
+.current-month {
+    display: inline-block;
+}
+
+.previous-month,
+.next-month {
+    color: #737373;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.previous-month::before {
+    background: url('/images/arrow.png') no-repeat center;
+    background-size: contain;
+    content: '';
+    display: inline-block;
+    height: 13px;
+    opacity: 0.3;
+    width: 20px;
+}
+
+.current-month::before {
+    background: url('/images/calender.png') no-repeat center;
+    background-size: contain;
+    content: '';
+    display: inline-block;
+    height: 20px;
+    margin-right: 5px;
+    vertical-align: middle;
+    width: 20px;
+}
+
+.next-month-placeholder {
+    margin-left: 50px;
+}
+
+.next-month::after {
+    background: url('/images/arrow.png') no-repeat center;
+    background-size: contain;
+    content: '';
+    display: inline-block;
+    height: 13px;
+    opacity: 0.3;
+    transform: scale(-1, 1);
+    width: 20px;
+}
+
+
+.current-month {
     font-weight: bold;
-    color: #333;
+    line-height: 40px;
 }
 
-.attendance__button {
-    text-decoration: none;
-    color: #333;
-    font-size: 1.0em;
-    padding: 0 10px;
-    transition: color 0.3s ease;
+.table__header {
+    border-bottom: 3px solid #E1E1E1;
 }
 
-.detail-link {
-    color:#333;
-    text-decoration: none;
-    transition: color 0.3s ease;
+.table__header--item {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-.detail-link:hover {
-    text-decoration: underline;
-    color: #0056b3;
-}
-
-.text-center {
+.table__description {
     text-align: center;
+}
+
+.table__description--item {
+    font-weight: 500;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.table__item--detail-link {
+    color: #000;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.table__row:not(:last-child) {
+    border-bottom: 2px solid #E1E1E1;
 }

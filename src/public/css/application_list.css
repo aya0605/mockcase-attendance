@@ -1,144 +1,28 @@
 .container {
-    max-width: 1230px;
-    margin: 50px auto;
-    padding: 0 15px;
+    max-width: 1540px;
+    margin: 0 auto;
+    padding: 50px;
+    padding-top: 50px;
+    background: #F0EFF2;
+    min-height: 100vh;
 }
 
 .page-title {
-    text-align: center;
-    font-size: 28px;
-    margin-bottom: 30px;
-    color: #333;
-}
-
-.application-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.application-table th,
-.application-table td {
-    padding: 12px 15px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-.application-table th {
-    background-color: #f8f8f8;
+    font-size: 28px;
+    margin: 0 auto 45px;
+    max-width: 100vh;
+    color: #000;
+    border-left: 7px solid #000;
+    padding-left: 5px;
     font-weight: bold;
-    color: #555;
-}
-
-.application-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.application-table tbody tr:hover {
-    background-color: #f0f0f0;
-}
-
-.status-pending {
-    color: #333;
-    font-weight: bold;
-}
-
-.status-approved {
-    color: black;
-    font-weight: bold;
-}
-
-.status-rejected {
-    color: #dc3545;
-    font-weight: bold;
-}
-
-.no-applications {
-    text-align: center;
-    padding: 20px;
-    color: #777;
-}
-
-.action-button {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.3s ease;
-    text-decoration: none;
-    color: white;
-    display: inline-block;
-    margin-right: 5px;
-}
-
-.approve-button {
-    background-color: #007bff;
-}
-
-.approve-button:hover {
-    background-color: #0056b3;
-}
-
-.reject-button {
-    background-color: #dc3545;
-}
-
-.reject-button:hover {
-    background-color: #c82333;
-}
-
-.detail-button {
-    background-color: #6c757d;
-}
-
-.detail-button:hover {
-    background-color: #5a6268;
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.pagination .page-item {
-    list-style: none;
-    margin: 0 5px;
-}
-
-.pagination .page-link {
-    display: block;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    text-decoration: none;
-    color: #007bff;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.pagination .page-item.active .page-link {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-}
-
-.pagination .page-link:hover:not(.active) {
-    background-color: #e9ecef;
-}
-
-.tab-container {
-    padding: 0;
-    margin: 0;
 }
 
 .tab-buttons {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 20px;
+    margin: 0 auto;
+    max-width: 100vh;
 }
 
 .tab-button {
@@ -146,28 +30,83 @@
     border: none;
     cursor: pointer;
     font-size: 16px;
-    font-weight: bold;
-    color: #888;
-    padding: 10px 15px;
-    position: relative;
-    transition: color 0.3s ease;
+    font-weight: normal;
+    color: #737373;
+    padding: 10px 0;
+
+    margin-right: 70px;
+    margin-left: 50px;
 }
 
 .tab-button.active {
-    color: #007bff;
-    border-bottom: 3px solid #007bff;
-}
-
-.tab-button:hover:not(.active) {
-    color: #555;
+    color: #000;
+    font-weight: bold;
+    border-bottom: none;
 }
 
 .tab-content {
     display: none;
+    border-top: 1px solid #000;
+    margin-top: 15px;
+    margin: 15px auto 0;
+    max-width: 100vh;
 }
 
-/* activeクラスが付いているタブコンテンツだけを表示する */
 .tab-content.active {
     display: block;
-    /* または display: table; */
+}
+
+.application-table {
+    margin: 40px auto 20px;
+    max-width: 100%;
+
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.application-table th,
+.application-table td {
+    padding: 10px 15px;
+    text-align: center;
+    border-bottom: 1px solid #E1E1E1;
+    color: #737373;
+}
+
+.application-table th {
+    background-color: #fff;
+    font-weight: bold;
+    color: #737373;
+    border-bottom: 3px solid #E1E1E1;
+}
+
+.application-table td {
+    font-weight: bold;
+    color: #000;
+}
+
+.application-table tbody tr:nth-child(even) {
+    background-color: #fff;
+}
+
+.application-table tbody tr:hover {
+    background-color: #fff;
+}
+
+.application-table tr:not(:last-child) td {
+    border-bottom: 2px solid #E1E1E1;
+}
+
+.action-button.detail-button {
+    background-color: transparent;
+    color: #000;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 0;
+}
+
+.action-button.detail-button:hover {
+    background-color: transparent;
 }

@@ -257,7 +257,7 @@ class AttendanceController extends Controller
                                 ->firstOrFail();
 
         $isPendingApplication = false;
-        // Check if there is a pending application for this attendance
+        
         if (Application::where('user_id', $user->id)->where('attendance_id', $attendanceId)->where('status', 'pending')->exists()) {
             $isPendingApplication = true;
         }

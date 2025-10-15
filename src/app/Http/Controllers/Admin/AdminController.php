@@ -84,11 +84,11 @@ class AdminController extends Controller
 
     public function usersMonthlyAttendances(Request $request, $id)
     {
-         $staff = User::findOrFail($id); // 変数名を`staff`に変更
+         $staff = User::findOrFail($id); 
         $date = $request->input('date') ? Carbon::parse($request->input('date')) : Carbon::today();
 
         $attendances = Attendance::with('breaks')
-                                 ->where('user_id', $staff->id) // `staff->id`に変更
+                                 ->where('user_id', $staff->id) 
                                  ->whereMonth('work_date', $date->month)
                                  ->whereYear('work_date', $date->year)
                                  ->get();
@@ -148,16 +148,14 @@ class AdminController extends Controller
             return redirect('/admin/dashboard')->with('error', '勤怠記録が見つかりませんでした。');
         }
 
-        // ビューに勤怠データとユーザー情報を渡す
         return view('admin.attendance_detail', [
             'attendance' => $attendanceData,
-            'user' => $attendanceData->user // ユーザー情報を取得して渡す
+            'user' => $attendanceData->user 
         ]);
     }
 
     public function update(Request $request, Attendance $attendance)
     {
-        // 入力値のバリデーション
         $validatedData = $request->validate([
             'start_time' => 'nullable|date_format:H:i',
             'end_time' => 'nullable|date_format:H:i|after_or_equal:start_time',
@@ -173,17 +171,14 @@ class AdminController extends Controller
         try {
             DB::beginTransaction();
 
-            // 勤怠情報を更新
             $attendance->update([
                 'start_time' => $request->start_time,
                 'end_time' => $request->end_time,
                 'note' => $request->note,
             ]);
 
-            // 休憩時間を更新 (既存の休憩情報を取得)
             $breaks = $attendance->breaks()->orderBy('id')->get();
 
-            // 休憩1の更新
             if (isset($validatedData['break_start_1']) || isset($validatedData['break_end_1'])) {
                 $start1 = $request->break_start_1 ? $workDate . ' ' . $request->break_start_1 . ':00' : null;
                 $end1 = $request->break_end_1 ? $workDate . ' ' . $request->break_end_1 . ':00' : null;
@@ -194,7 +189,6 @@ class AdminController extends Controller
                         'end_time' => $end1,
                     ]);
                 } else {
-                    // 新規作成が必要な場合
                     $attendance->breaks()->create([
                         'start_time' => $start1,
                         'end_time' => $end1,
@@ -202,7 +196,6 @@ class AdminController extends Controller
                 }
             }
 
-            // 休憩2の更新
             if (isset($validatedData['break_start_2']) || isset($validatedData['break_end_2'])) {
                 $start2 = $request->break_start_2 ? $workDate . ' ' . $request->break_start_2 . ':00' : null;
                 $end2 = $request->break_end_2 ? $workDate . ' ' . $request->break_end_2 . ':00' : null;
@@ -213,7 +206,6 @@ class AdminController extends Controller
                         'end_time' => $end2,
                     ]);
                 } else {
-                    // 新規作成が必要な場合
                     $attendance->breaks()->create([
                         'start_time' => $start2,
                         'end_time' => $end2,

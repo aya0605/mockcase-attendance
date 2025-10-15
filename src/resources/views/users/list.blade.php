@@ -1,48 +1,49 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/attendance_list.css') }}">
+<link rel="stylesheet" href="{{ asset('css/attendance_list.css') }}"> 
 @endsection
 
 @section('content')
-<div class="attendance__content">
-    <h1 class="attendance__date-text">{{ $currentMonth }}の勤怠</h1>
-
-    <div class="attendance__header"> 
-        <a href="{{ url('/attendance/list?month=' . $prevMonth) }}" class="attendance__button">← 前月</a> 
-        <h2 class="attendance__date">{{ $currentMonth }}</h2> 
-        <a href="{{ url('/attendance/list?month=' . $nextMonth) }}" class="attendance__button">翌月 →</a> 
+<div class="attendance-list__content">  
+    <div class="content__header">
+        <h2 class="content__header--item">勤怠一覧</h2>
     </div>
 
-    <table class="attendance__table"> 
-        <thead>
-            <tr>
-                <th>日付</th>
-                <th>出勤</th>
-                <th>退勤</th>
-                <th>休憩時間</th>
-                <th>勤務時間</th>
-                <th>詳細</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($attendanceData as $data)
-            <tr>
-                <td>{{ $data['work_date'] }}</td>
-                <td>{{ $data['start_time'] }}</td>
-                <td>{{ $data['end_time'] }}</td>
-                <td>{{ $data['total_break_time'] }}</td>
-                <td>{{ $data['total_work_time'] }}</td>
-                <td>
-                    <a href="/attendance/detail/{{ $data['attendance_id'] }}" class="detail-link">詳細</a>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="6">今月の勤怠記録はありません。</td>
-            </tr>
-            @endforelse
-        </tbody>
+    <div class="content__menu">
+        <a class="previous-month" href="{{ url('/attendance/list?month=' . $prevMonth) }}">前月</a>
+
+        <p class="current-month">{{ $currentMonth }}</p>
+
+        <a class="next-month" href="{{ url('/attendance/list?month=' . $nextMonth) }}">翌月</a>
+    </div>
+
+    <table class="table"> 
+        <tr class="table__row">
+            <th class="table__header"><p class="table__header--item">日付</p></th>
+            <th class="table__header"><p class="table__header--item">出勤</p></th>
+            <th class="table__header"><p class="table__header--item">退勤</p></th>
+            <th class="table__header"><p class="table__header--item">休憩</p></th>
+            <th class="table__header"><p class="table__header--item">合計</p></th>
+            <th class="table__header"><p class="table__header--item">詳細</p></th>
+        </tr>
+        
+        @forelse ($attendanceData as $data)
+        <tr class="table__row">
+            <td class="table__description"><p class="table__description--item">{{ $data['work_date'] }}</p></td>
+            <td class="table__description"><p class="table__description--item">{{ $data['start_time'] }}</p></td>
+            <td class="table__description"><p class="table__description--item">{{ $data['end_time'] }}</p></td>
+            <td class="table__description"><p class="table__description--item">{{ $data['total_break_time'] }}</p></td>
+            <td class="table__description"><p class="table__description--item">{{ $data['total_work_time'] }}</p></td>
+            <td class="table__description">
+                <a class="table__item--detail-link" href="/attendance/detail/{{ $data['attendance_id'] }}">詳細</a>
+            </td>
+        </tr>
+        @empty
+        <tr class="table__row">
+            <td colspan="6" class="table__description">今月の勤怠記録はありません。</td>
+        </tr>
+        @endforelse
     </table>
 </div>
 @endsection

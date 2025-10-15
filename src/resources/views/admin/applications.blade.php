@@ -99,7 +99,6 @@
                 <td>{{ $application->note }}</td>
                 <td>{{ \Carbon\Carbon::parse($application->created_at)->format('Y-m-d H:i') }}</td>
                 <td>
-                    {{-- 管理者用の詳細ページURLに修正 --}}
                     <a href="/admin/applications/{{ $application->id }}" class="action-button detail-button">詳細</a>
                 </td>
                 @if (Auth::user()->role === 'admin')
