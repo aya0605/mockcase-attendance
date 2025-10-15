@@ -47,7 +47,7 @@
 }
 
 .status-approved {
-    color: #28a745;
+    color: black;
     font-weight: bold;
 }
 
@@ -160,4 +160,14 @@
 
 .tab-button:hover:not(.active) {
     color: #555;
+}
+
+.tab-content {
+    display: none;
+}
+
+/* activeクラスが付いているタブコンテンツだけを表示する */
+.tab-content.active {
+    display: block;
+    /* または display: table; */
 }

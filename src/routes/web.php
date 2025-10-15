@@ -21,43 +21,9 @@ use App\Http\Controllers\Admin\UserController;
 |
 */
 
-Route::middleware('auth')->group(function () {
-    Route::get('/', [AttendanceController::class, 'index']);
-    Route::get('/attendance', [AttendanceController::class, 'index']);
-    Route::post('/attendance/start-work', [AttendanceController::class, 'startWork']);
-    Route::post('/attendance/end-work', [AttendanceController::class, 'endWork']);
-    Route::post('/attendance/start-break', [AttendanceController::class, 'startBreak']);
-    Route::post('/attendance/end-break', [AttendanceController::class, 'endBreak']);
-    Route::get('/attendance/list', [AttendanceController::class,'list']);
-    Route::get('/attendance/detail/{attendanceId}', [AttendanceController::class, 'detail']);
-    Route::post('/attendance/update-application/{attendanceId}', [AttendanceController::class, 'submitApplication']);
-    
-    Route::get('/login/redirect', [AdminController::class, 'handleLoginRedirect']);
-    
-    Route::get('/applications', [UserApplicationController::class, 'index']);
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('/', [AttendanceController::class, 'index']);
-    Route::get('/attendance', [AttendanceController::class, 'index']);
-    Route::post('/attendance/start-work', [AttendanceController::class, 'startWork']);
-    Route::post('/attendance/end-work', [AttendanceController::class, 'endWork']);
-    Route::post('/attendance/start-break', [AttendanceController::class, 'startBreak']);
-    Route::post('/attendance/end-break', [AttendanceController::class, 'endBreak']);
-    Route::get('/attendance/list', [AttendanceController::class,'list']);
-    Route::get('/attendance/detail/{attendanceId}', [AttendanceController::class, 'detail']);
-    Route::post('/attendance/update-application/{attendanceId}', [AttendanceController::class, 'submitApplication']);
-    
-    Route::get('/login/redirect', [AdminController::class, 'handleLoginRedirect']);
-
-    Route::get('/applications', [UserApplicationController::class, 'index']);
-});
-
-
 // 一般ユーザー向けの認証済みルート
 Route::middleware('auth')->group(function () {
     Route::get('/', [AttendanceController::class, 'index']);
-    Route::get('/attendance', [AttendanceController::class, 'index']);
     Route::post('/attendance/start-work', [AttendanceController::class, 'startWork']);
     Route::post('/attendance/end-work', [AttendanceController::class, 'endWork']);
     Route::post('/attendance/start-break', [AttendanceController::class, 'startBreak']);
@@ -66,24 +32,30 @@ Route::middleware('auth')->group(function () {
     Route::get('/attendance/detail/{attendanceId}', [AttendanceController::class, 'detail']);
     Route::post('/attendance/update-application/{attendanceId}', [AttendanceController::class, 'submitApplication']);
     
-    Route::get('/login/redirect', [AdminController::class, 'handleLoginRedirect']);
     Route::get('/applications', [UserApplicationController::class, 'index']);
-});
+    Route::get('/user/applications/{applicationId}', [UserApplicationController::class, 'show']);
 
+});
 
 // 管理者専用の認証済みルート
 Route::middleware(['auth', 'can:admin-access'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard']);
     
-    Route::get('/users', [AdminController::class, 'usersIndex']);
-    Route::get('/users/{id}/attendances', [AdminController::class, 'usersMonthlyAttendances']);
-
+    // 勤怠関連のルートを上にまとめる
     Route::get('/attendances/{attendanceId}', [AdminController::class, 'detail']);
     Route::post('/attendances/{attendanceId}', [AdminController::class, 'update']);
-    
+    Route::put('/attendances/{attendance}', [AdminController::class, 'update']);
+
+    // ユーザー関連のルートをより具体的なものから順にまとめる
+    Route::get('/users/{user}/attendances/{year}/{month}', [UserController::class, 'showMonthlyAttendance']);
+    Route::get('/users/{user}/attendances/{attendanceId}', [UserController::class, 'showAttendanceDetail']);
+    Route::get('/users/{user}/attendances', [UserController::class, 'showAttendanceList']);
+    Route::get('/users/{user}', [UserController::class, 'show']);
+    Route::get('/users', [UserController::class, 'index']);
+
+    // アプリケーション関連のルート
     Route::get('/applications', [AdminApplicationController::class, 'index']);
     Route::get('/applications/{applicationId}', [AdminApplicationController::class, 'show']);
-
     Route::post('/applications/{application}/approve', [AdminApplicationController::class, 'approve']); 
     Route::post('/applications/{application}/reject', [AdminApplicationController::class, 'reject']); 
 });

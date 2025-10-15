@@ -30,7 +30,7 @@ class AttendanceController extends Controller
                 $status = '出勤中';
             }
         }
-        return view('attendance.index', compact('attendance', 'status'));
+        return view('users.index', compact('attendance', 'status'));
     }
 
     public function startWork(Request $request)
@@ -206,8 +206,8 @@ class AttendanceController extends Controller
         $user = Auth::user();
         $currentMonth = $request->input('month') ? Carbon::parse($request->input('month')) : Carbon::now();
 
-        $firstDayOfMonth = $currentMonth->startOfMonth()->toDateString();
-        $lastDayOfMonth = $currentMonth->endOfMonth()->toDateString();
+        $firstDayOfMonth = $currentMonth->copy()->startOfMonth()->toDateString();
+        $lastDayOfMonth = $currentMonth->copy()->endOfMonth()->toDateString();
 
         $attendances = Attendance::where('user_id', $user->id)
                                 ->whereBetween('work_date', [$firstDayOfMonth, $lastDayOfMonth])
@@ -239,9 +239,9 @@ class AttendanceController extends Controller
             ];
         }
 
-        return view('attendance.list', [
+        return view('users.list', [
             'attendanceData' => $attendanceData,
-            'currentMonth' => $currentMonth->format('Y年m月'),
+            'currentMonth' => $currentMonth->format('Y年m月'), 
             'prevMonth' => $currentMonth->copy()->subMonth()->format('Y-m'),
             'nextMonth' => $currentMonth->copy()->addMonth()->format('Y-m'),
         ]);
@@ -257,8 +257,12 @@ class AttendanceController extends Controller
                                 ->firstOrFail();
 
         $isPendingApplication = false;
+        // Check if there is a pending application for this attendance
+        if (Application::where('user_id', $user->id)->where('attendance_id', $attendanceId)->where('status', 'pending')->exists()) {
+            $isPendingApplication = true;
+        }
 
-        return view('attendance.detail', compact('attendance', 'isPendingApplication'));
+        return view('users.detail', compact('attendance', 'isPendingApplication'));
 
     }
 
@@ -285,7 +289,8 @@ class AttendanceController extends Controller
         $application->status = 'pending';
         $application->save();
 
-        return redirect('/applications')->with('success', '修正申請が正常に送信されました。');
+        return redirect('/applications')->with('success');
 
     }
+
 }

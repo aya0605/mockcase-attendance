@@ -163,7 +163,7 @@
         if (response.ok) {
             if (messageArea) {
                 messageArea.textContent = successMessage; 
-                messageArea.style.color = 'green';
+                messageArea.style.color = 'black';
             }
             
             if (data.new_attendance_status) {

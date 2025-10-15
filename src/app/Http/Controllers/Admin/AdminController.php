@@ -11,6 +11,8 @@ use App\Models\Attendance;
 use App\Models\AttendanceBreak;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -140,43 +142,92 @@ class AdminController extends Controller
     
     public function detail($attendanceId)
     {
-        $attendanceData = Attendance::with('breaks')->find($attendanceId);
+        $attendanceData = Attendance::with('breaks', 'user')->find($attendanceId);
 
         if (!$attendanceData) {
             return redirect('/admin/dashboard')->with('error', '勤怠記録が見つかりませんでした。');
         }
 
-        return view('admin.detail', [
-            'attendanceData' => $attendanceData
+        // ビューに勤怠データとユーザー情報を渡す
+        return view('admin.attendance_detail', [
+            'attendance' => $attendanceData,
+            'user' => $attendanceData->user // ユーザー情報を取得して渡す
         ]);
     }
 
-    public function update(AdminDetailRequest $request, $attendanceId)
+    public function update(Request $request, Attendance $attendance)
     {
-        $attendance = Attendance::find($attendanceId);
-        if (!$attendance) {
-            return redirect('/admin/dashboard')->with('error', '勤怠記録が見つかりませんでした。');
+        // 入力値のバリデーション
+        $validatedData = $request->validate([
+            'start_time' => 'nullable|date_format:H:i',
+            'end_time' => 'nullable|date_format:H:i|after_or_equal:start_time',
+            'break_start_1' => 'nullable|date_format:H:i',
+            'break_end_1' => 'nullable|date_format:H:i|after_or_equal:break_start_1',
+            'break_start_2' => 'nullable|date_format:H:i',
+            'break_end_2' => 'nullable|date_format:H:i|after_or_equal:break_start_2',
+            'note' => 'nullable|string|max:500',
+        ]);
+
+        $workDate = $attendance->work_date->toDateString();
+        
+        try {
+            DB::beginTransaction();
+
+            // 勤怠情報を更新
+            $attendance->update([
+                'start_time' => $request->start_time,
+                'end_time' => $request->end_time,
+                'note' => $request->note,
+            ]);
+
+            // 休憩時間を更新 (既存の休憩情報を取得)
+            $breaks = $attendance->breaks()->orderBy('id')->get();
+
+            // 休憩1の更新
+            if (isset($validatedData['break_start_1']) || isset($validatedData['break_end_1'])) {
+                $start1 = $request->break_start_1 ? $workDate . ' ' . $request->break_start_1 . ':00' : null;
+                $end1 = $request->break_end_1 ? $workDate . ' ' . $request->break_end_1 . ':00' : null;
+            
+                if ($breaks->count() > 0) {
+                    $breaks[0]->update([
+                        'start_time' => $start1,
+                        'end_time' => $end1,
+                    ]);
+                } else {
+                    // 新規作成が必要な場合
+                    $attendance->breaks()->create([
+                        'start_time' => $start1,
+                        'end_time' => $end1,
+                    ]);
+                }
+            }
+
+            // 休憩2の更新
+            if (isset($validatedData['break_start_2']) || isset($validatedData['break_end_2'])) {
+                $start2 = $request->break_start_2 ? $workDate . ' ' . $request->break_start_2 . ':00' : null;
+                $end2 = $request->break_end_2 ? $workDate . ' ' . $request->break_end_2 . ':00' : null;
+
+                if ($breaks->count() > 1) {
+                    $breaks[1]->update([
+                        'start_time' => $start2,
+                        'end_time' => $end2,
+                    ]);
+                } else {
+                    // 新規作成が必要な場合
+                    $attendance->breaks()->create([
+                        'start_time' => $start2,
+                        'end_time' => $end2,
+                    ]);
+                }
+            }
+            
+            DB::commit();
+
+            return redirect()->back()->with('success');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('勤怠更新エラー: ' . $e->getMessage());
+            return redirect()->back()->withErrors('勤怠情報の更新中にエラーが発生しました。');
         }
-
-        $attendance->start_time = $request->input('start_time');
-        $attendance->end_time = $request->input('end_time');
-        $attendance->note = $request->input('note');
-        $attendance->save();
-
-        if ($attendance->breaks->isNotEmpty()) {
-            $break1 = $attendance->breaks->first();
-            $break1->start_time = $request->input('break_start_1');
-            $break1->end_time = $request->input('break_end_1');
-            $break1->save();
-        }
-
-        if ($attendance->breaks->count() > 1) {
-            $break2 = $attendance->breaks->skip(1)->first();
-            $break2->start_time = $request->input('break_start_2');
-            $break2->end_time = $request->input('break_end_2');
-            $break2->save();
-        }
-
-        return redirect()->back()->with('success', '勤怠記録を更新しました。');
     }
 }

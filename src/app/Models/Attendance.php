@@ -15,6 +15,7 @@ class Attendance extends Model
         'work_date',
         'start_time',
         'end_time',
+        'application_id',
     ];
 
     protected $casts = [
@@ -31,5 +32,10 @@ class Attendance extends Model
     public function breaks()
     {
         return $this->hasMany(AttendanceBreak::class); 
+    }
+
+    public function application()
+    {
+        return $this->belongsTo(Application::class);
     }
 }

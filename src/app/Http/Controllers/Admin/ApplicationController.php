@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Application;
+use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\Log; 
 
 class ApplicationController extends Controller
 {
@@ -22,68 +24,69 @@ class ApplicationController extends Controller
 
         $currentTab = request()->query('tab', 'pending');
 
-        return view('admin.applications.application_list', compact('pendingApplications', 'approvedApplications', 'currentTab'));
+        return view('admin.applications', compact('pendingApplications', 'approvedApplications', 'currentTab'));
     }
 
-    /**
-     * Approve the application.
-     *
-     * @param \App\Models\Application $application
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function approve(Application $application)
+    public function approve(Request $request, $id)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
-
-            $application->update([
-                'status' => 'approved',
-                'approved_at' => now(),
-            ]);
-
+            $application = Application::findOrFail($id);
             $attendance = $application->attendance;
-            if ($attendance) {
-                $attendance->update([
-                    'start_time' => $application->applied_start_time,
-                    'end_time' => $application->applied_end_time,
-                    'note' => $application->note
-                ]);
+
+            if (!$attendance) {
+                throw new \Exception('関連する勤怠データが見つかりません。');
             }
-            
-            $appliedBreaks = json_decode($application->applied_breaks, true);
-            foreach ($appliedBreaks as $breakData) {
-                if (isset($breakData['id'])) {
-                    $break = $attendance->breaks()->find($breakData['id']);
-                    if ($break) {
-                        $break->update([
-                            'start_time' => $breakData['start_time'],
-                            'end_time' => $breakData['end_time']
+
+            // 1. 勤怠データの更新
+            $attendance->start_time = $application->applied_start_time;
+            $attendance->end_time = $application->applied_end_time;
+            $attendance->save();
+
+            // 2. 既存の休憩データを削除
+            $attendance->breaks()->delete();
+
+            // 3. 新しい休憩データを作成・保存
+            $appliedBreaks = json_decode($application->applied_breaks, true); // JSON文字列をデコード
+
+            Log::info('Applied Breaks:', ['data' => $appliedBreaks]);
+
+            $newBreaks = [];
+            if (is_array($appliedBreaks)) {
+                foreach ($appliedBreaks as $break) {
+                    if (isset($break['start_time']) && isset($break['end_time'])) {
+                         $newBreaks[] = new \App\Models\AttendanceBreak([
+                            'attendance_id' => $attendance->id,
+                            'start_time' => $break['start_time'],
+                            'end_time' => $break['end_time']
                         ]);
+                    } else {
+                        Log::error('Invalid break data format', ['break' => $break]);
                     }
                 }
             }
 
+            Log::info('New Breaks to be saved:', ['data' => $newBreaks]);
+
+            if (!empty($newBreaks)) {
+                $attendance->breaks()->saveMany($newBreaks);
+            }
+
+            // 4. 申請のステータスを更新
+            $application->status = 'approved';
+            $application->save();
+
             DB::commit();
 
-            return response()->json([
-                'success' => true,
-                'message' => '申請を承認しました。',
-                'application' => $application->load(['user', 'attendance'])
-            ]);
+            return response()->json(['success' => true]);
+
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Application approval failed: ' . $e->getMessage());
+            Log::error('Approval Error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return response()->json(['success' => false, 'message' => '承認処理中にエラーが発生しました。'], 500);
         }
     }
 
-    /**
-     * Reject the application.
-     *
-     * @param \App\Models\Application $application
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function reject(Application $application, Request $request)
     {
         try {
@@ -108,16 +111,11 @@ class ApplicationController extends Controller
         }
     }
 
-    /**
-     * Display the specified application.
-     *
-     * @param int $applicationId
-     * @return \Illuminate\View\View
-     */
     public function show(int $applicationId)
     {
         $application = Application::with(['user', 'attendance'])->findOrFail($applicationId);
         
-        return view('admin.applications.application_detail', compact('application'));
+        return view('admin.detail', compact('application'));
+
     }
 }

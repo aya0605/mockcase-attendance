@@ -58,3 +58,9 @@
     margin-top: 20px;
     text-align: center;
 }
+
+.register__button-submit {
+    /* 水色に設定 */
+    color: #0587ea;
+    text-decoration: none;
+}

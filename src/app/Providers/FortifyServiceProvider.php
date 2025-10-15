@@ -52,12 +52,10 @@ class FortifyServiceProvider extends ServiceProvider
        Fortify::authenticateUsing(function (Request $request) {
             $user = User::where('email', $request->email)->first();
 
-            // 認証が成功した場合、ユーザーオブジェクトを返します。
             if ($user && Hash::check($request->password, $user->password)) {
                 return $user;
             }
 
-            // 認証に失敗した場合は、nullを返します。
             return null;
         });
 

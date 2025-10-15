@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="attendance__content">
-    <h1 class="attendance__date-text">{{ Carbon\Carbon::createFromFormat('Y年m月', $currentMonth)->format('Y年m月') }}の勤怠</h1>
+    <h1 class="attendance__date-text">{{ $currentMonth }}の勤怠</h1>
 
     <div class="attendance__header"> 
         <a href="{{ url('/attendance/list?month=' . $prevMonth) }}" class="attendance__button">← 前月</a> 

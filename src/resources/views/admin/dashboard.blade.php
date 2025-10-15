@@ -36,7 +36,7 @@
                 <td>
                     
                     @if($attendance['attendance_id'])
-                        <a href="{{ url('/admin/attendance/detail/' . $attendance['attendance_id']) }}" class="detail-link">詳細</a>
+                        <a href="{{ url('/admin/attendances/' . $attendance['attendance_id']) }}" class="detail-link">詳細</a>
                     @else
                         - 
                     @endif
